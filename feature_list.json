@@ -1,0 +1,733 @@
+{
+  "project": "VelloPad",
+  "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
+  "version": "1.0",
+  "totalFeatures": 44,
+  "completedFeatures": 0,
+  "phases": {
+    "phase1_foundation": "Foundation & Auth (BS-EP01)",
+    "phase2_book_studio": "Book Studio Core (BS-EP02)",
+    "phase3_assets": "Assets, Templates, Cover (BS-EP03)",
+    "phase4_rendition": "Rendition Pipeline (BS-EP04)",
+    "phase5_commerce": "Commerce + Orders (BS-EP05)",
+    "phase6_print": "Print Orchestrator (BS-EP06)",
+    "phase7_messaging": "Admin Campaigns + Lifecycle Messaging (BS-EP07)",
+    "phase8_marketing": "SEO Blog + Marketing Hub (BS-EP08)",
+    "phase9_reliability": "Analytics & Reliability (BS-EP09)"
+  },
+  "features": [
+    {
+      "id": "BS-101",
+      "name": "Auth + Workspace Creation",
+      "description": "User signup/login with default workspace creation",
+      "priority": "P0",
+      "phase": 1,
+      "effort": "5pts",
+      "passes": false,
+      "category": "auth",
+      "files": [
+        "src/app/auth/",
+        "src/lib/auth/"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "BS-102",
+      "name": "Workspace Member Roles",
+      "description": "Owner, admin, member roles with invite/remove",
+      "priority": "P1",
+      "phase": 1,
+      "effort": "3pts",
+      "passes": false,
+      "category": "auth",
+      "files": [
+        "src/lib/workspace/roles.ts"
+      ],
+      "dependencies": [
+        "BS-101"
+      ]
+    },
+    {
+      "id": "BS-103",
+      "name": "Settings Page",
+      "description": "Profile + workspace settings management",
+      "priority": "P1",
+      "phase": 1,
+      "effort": "3pts",
+      "passes": false,
+      "category": "settings",
+      "files": [
+        "src/app/settings/"
+      ],
+      "dependencies": [
+        "BS-101"
+      ]
+    },
+    {
+      "id": "BS-201",
+      "name": "Create Book Wizard",
+      "description": "Title, genre, trim, binding selection in <60s",
+      "priority": "P0",
+      "phase": 2,
+      "effort": "5pts",
+      "passes": false,
+      "category": "book",
+      "files": [
+        "src/app/books/new/"
+      ],
+      "dependencies": [
+        "BS-101"
+      ]
+    },
+    {
+      "id": "BS-202",
+      "name": "Outline Builder",
+      "description": "Chapters/sections drag-drop reorder",
+      "priority": "P0",
+      "phase": 2,
+      "effort": "8pts",
+      "passes": false,
+      "category": "book",
+      "files": [
+        "src/components/outline/"
+      ],
+      "dependencies": [
+        "BS-201"
+      ]
+    },
+    {
+      "id": "BS-203",
+      "name": "Chapter Editor",
+      "description": "Rich text editor with autosave + word count (TipTap)",
+      "priority": "P0",
+      "phase": 2,
+      "effort": "13pts",
+      "passes": false,
+      "category": "editor",
+      "files": [
+        "src/components/editor/"
+      ],
+      "dependencies": [
+        "BS-202"
+      ]
+    },
+    {
+      "id": "BS-204",
+      "name": "Book Dashboard",
+      "description": "Progress percent + next step CTA",
+      "priority": "P1",
+      "phase": 2,
+      "effort": "5pts",
+      "passes": false,
+      "category": "dashboard",
+      "files": [
+        "src/app/books/[id]/"
+      ],
+      "dependencies": [
+        "BS-201",
+        "BS-203"
+      ]
+    },
+    {
+      "id": "BS-205",
+      "name": "Version Snapshots",
+      "description": "Manual + milestone auto-snapshots with restore",
+      "priority": "P1",
+      "phase": 2,
+      "effort": "8pts",
+      "passes": false,
+      "category": "versioning",
+      "files": [
+        "src/lib/versions/"
+      ],
+      "dependencies": [
+        "BS-203"
+      ]
+    },
+    {
+      "id": "BS-301",
+      "name": "Asset Library",
+      "description": "Upload images, store metadata, reuse across book",
+      "priority": "P0",
+      "phase": 3,
+      "effort": "8pts",
+      "passes": false,
+      "category": "assets",
+      "files": [
+        "src/components/assets/",
+        "src/lib/storage/"
+      ],
+      "dependencies": [
+        "BS-101",
+        "BS-201"
+      ]
+    },
+    {
+      "id": "BS-302",
+      "name": "Print Quality Warnings",
+      "description": "DPI estimate + safe/unsafe indicators",
+      "priority": "P1",
+      "phase": 3,
+      "effort": "5pts",
+      "passes": false,
+      "category": "assets",
+      "files": [
+        "src/lib/assets/quality.ts"
+      ],
+      "dependencies": [
+        "BS-301"
+      ]
+    },
+    {
+      "id": "BS-303",
+      "name": "Template System",
+      "description": "Interior styles + spec defaults",
+      "priority": "P1",
+      "phase": 3,
+      "effort": "8pts",
+      "passes": false,
+      "category": "templates",
+      "files": [
+        "src/lib/templates/"
+      ],
+      "dependencies": [
+        "BS-201"
+      ]
+    },
+    {
+      "id": "BS-304",
+      "name": "Cover Basics",
+      "description": "Title/subtitle/author + safe zones overlay",
+      "priority": "P1",
+      "phase": 3,
+      "effort": "8pts",
+      "passes": false,
+      "category": "cover",
+      "files": [
+        "src/components/cover/"
+      ],
+      "dependencies": [
+        "BS-201"
+      ]
+    },
+    {
+      "id": "BS-401",
+      "name": "Rendition Request",
+      "description": "Enqueue job for interior+cover PDFs",
+      "priority": "P0",
+      "phase": 4,
+      "effort": "8pts",
+      "passes": false,
+      "category": "rendition",
+      "files": [
+        "src/lib/rendition/queue.ts"
+      ],
+      "dependencies": [
+        "BS-203",
+        "BS-205"
+      ]
+    },
+    {
+      "id": "BS-402",
+      "name": "Preflight Engine",
+      "description": "Fonts, margins, bleed, low-res image checks",
+      "priority": "P0",
+      "phase": 4,
+      "effort": "13pts",
+      "passes": false,
+      "category": "rendition",
+      "files": [
+        "src/lib/rendition/preflight.ts"
+      ],
+      "dependencies": [
+        "BS-401",
+        "BS-302"
+      ]
+    },
+    {
+      "id": "BS-403",
+      "name": "Preview System",
+      "description": "Fast preview + print simulation preview",
+      "priority": "P1",
+      "phase": 4,
+      "effort": "8pts",
+      "passes": false,
+      "category": "preview",
+      "files": [
+        "src/components/preview/"
+      ],
+      "dependencies": [
+        "BS-203"
+      ]
+    },
+    {
+      "id": "BS-501",
+      "name": "Quote Flow",
+      "description": "Qty + address → price + shipping options",
+      "priority": "P0",
+      "phase": 5,
+      "effort": "8pts",
+      "passes": false,
+      "category": "commerce",
+      "files": [
+        "src/app/api/quote/"
+      ],
+      "dependencies": [
+        "BS-401",
+        "BS-402",
+        "BS-601"
+      ]
+    },
+    {
+      "id": "BS-502",
+      "name": "Stripe Checkout",
+      "description": "Checkout + webhook confirmation",
+      "priority": "P0",
+      "phase": 5,
+      "effort": "8pts",
+      "passes": false,
+      "category": "commerce",
+      "files": [
+        "src/app/api/checkout/",
+        "src/lib/stripe/"
+      ],
+      "dependencies": [
+        "BS-501"
+      ]
+    },
+    {
+      "id": "BS-503",
+      "name": "Order Detail Page",
+      "description": "Status timeline + tracking",
+      "priority": "P0",
+      "phase": 5,
+      "effort": "5pts",
+      "passes": false,
+      "category": "orders",
+      "files": [
+        "src/app/orders/[id]/"
+      ],
+      "dependencies": [
+        "BS-502",
+        "BS-602"
+      ]
+    },
+    {
+      "id": "BS-504",
+      "name": "Reorder Flow",
+      "description": "Reorder from saved rendition without regenerating",
+      "priority": "P1",
+      "phase": 5,
+      "effort": "3pts",
+      "passes": false,
+      "category": "orders",
+      "files": [
+        "src/app/orders/reorder/"
+      ],
+      "dependencies": [
+        "BS-503"
+      ]
+    },
+    {
+      "id": "BS-601",
+      "name": "Print Orchestrator Service",
+      "description": "Canonical interface + adapter framework",
+      "priority": "P0",
+      "phase": 6,
+      "effort": "8pts",
+      "passes": false,
+      "category": "print",
+      "files": [
+        "src/lib/print/orchestrator.ts"
+      ],
+      "dependencies": [
+        "BS-401"
+      ]
+    },
+    {
+      "id": "BS-602",
+      "name": "Provider Adapter v1",
+      "description": "First POD provider (Peecho/Prodigi/Lulu)",
+      "priority": "P0",
+      "phase": 6,
+      "effort": "13pts",
+      "passes": false,
+      "category": "print",
+      "files": [
+        "src/lib/print/adapters/"
+      ],
+      "dependencies": [
+        "BS-601"
+      ]
+    },
+    {
+      "id": "BS-603",
+      "name": "Webhook Ingestion",
+      "description": "Provider → order status updates",
+      "priority": "P0",
+      "phase": 6,
+      "effort": "8pts",
+      "passes": false,
+      "category": "print",
+      "files": [
+        "src/app/api/webhooks/print/"
+      ],
+      "dependencies": [
+        "BS-602"
+      ]
+    },
+    {
+      "id": "BS-604",
+      "name": "Fallback Polling",
+      "description": "Poll providers without reliable webhooks",
+      "priority": "P1",
+      "phase": 6,
+      "effort": "5pts",
+      "passes": false,
+      "category": "print",
+      "files": [
+        "src/lib/print/polling.ts"
+      ],
+      "dependencies": [
+        "BS-602"
+      ]
+    },
+    {
+      "id": "BS-701",
+      "name": "Event Collection Pipeline",
+      "description": "Product events stored + forwarded to analytics",
+      "priority": "P0",
+      "phase": 7,
+      "effort": "5pts",
+      "passes": false,
+      "category": "analytics",
+      "files": [
+        "src/lib/events/"
+      ],
+      "dependencies": [
+        "BS-101"
+      ]
+    },
+    {
+      "id": "BS-702",
+      "name": "Lifecycle Email Automations",
+      "description": "Activation, stalled, proof push, post-delivery",
+      "priority": "P0",
+      "phase": 7,
+      "effort": "8pts",
+      "passes": false,
+      "category": "email",
+      "files": [
+        "src/lib/email/lifecycle/"
+      ],
+      "dependencies": [
+        "BS-701",
+        "BS-503"
+      ]
+    },
+    {
+      "id": "BS-703",
+      "name": "Admin Broadcast Tool",
+      "description": "Segment → send campaign",
+      "priority": "P1",
+      "phase": 7,
+      "effort": "8pts",
+      "passes": false,
+      "category": "admin",
+      "files": [
+        "src/app/admin/campaigns/"
+      ],
+      "dependencies": [
+        "BS-701"
+      ]
+    },
+    {
+      "id": "BS-801",
+      "name": "Headless CMS Integration",
+      "description": "Blog + tutorials from CMS",
+      "priority": "P1",
+      "phase": 8,
+      "effort": "8pts",
+      "passes": false,
+      "category": "content",
+      "files": [
+        "src/lib/cms/"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "BS-802",
+      "name": "Marketing Hub",
+      "description": "Daily tasks + weekly plan generator",
+      "priority": "P1",
+      "phase": 8,
+      "effort": "13pts",
+      "passes": false,
+      "category": "marketing",
+      "files": [
+        "src/app/marketing/"
+      ],
+      "dependencies": [
+        "BS-701",
+        "BS-702"
+      ]
+    },
+    {
+      "id": "BS-901",
+      "name": "Job Observability",
+      "description": "Render job logs, retries, alerting",
+      "priority": "P0",
+      "phase": 9,
+      "effort": "5pts",
+      "passes": false,
+      "category": "reliability",
+      "files": [
+        "src/lib/jobs/monitoring.ts"
+      ],
+      "dependencies": [
+        "BS-401"
+      ]
+    },
+    {
+      "id": "BS-902",
+      "name": "Commerce Audit Logs",
+      "description": "Provider audit logs with PII redaction",
+      "priority": "P1",
+      "phase": 9,
+      "effort": "3pts",
+      "passes": false,
+      "category": "security",
+      "files": [
+        "src/lib/audit/"
+      ],
+      "dependencies": [
+        "BS-502",
+        "BS-602"
+      ]
+    },
+    {
+      "id": "DB-001",
+      "name": "Database Schema - Core",
+      "description": "Workspaces, books, chapters tables",
+      "priority": "P0",
+      "phase": 1,
+      "effort": "3pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "DB-002",
+      "name": "Database Schema - Assets",
+      "description": "Assets, templates tables",
+      "priority": "P0",
+      "phase": 3,
+      "effort": "2pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "DB-001"
+      ]
+    },
+    {
+      "id": "DB-003",
+      "name": "Database Schema - Renditions",
+      "description": "Renditions, render_jobs tables",
+      "priority": "P0",
+      "phase": 4,
+      "effort": "2pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "DB-001"
+      ]
+    },
+    {
+      "id": "DB-004",
+      "name": "Database Schema - Commerce",
+      "description": "Orders, quotes, shipments tables",
+      "priority": "P0",
+      "phase": 5,
+      "effort": "3pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "DB-001"
+      ]
+    },
+    {
+      "id": "DB-005",
+      "name": "Database Schema - Events",
+      "description": "Events, campaigns, email_sends tables",
+      "priority": "P0",
+      "phase": 7,
+      "effort": "2pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "DB-001"
+      ]
+    },
+    {
+      "id": "UI-001",
+      "name": "Design System Setup",
+      "description": "shadcn/ui + VelloPad color palette",
+      "priority": "P0",
+      "phase": 1,
+      "effort": "3pts",
+      "passes": false,
+      "category": "ui",
+      "files": [
+        "src/app/globals.css",
+        "tailwind.config.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "UI-002",
+      "name": "Dashboard Layout",
+      "description": "Book cards with progress and CTAs",
+      "priority": "P0",
+      "phase": 2,
+      "effort": "5pts",
+      "passes": false,
+      "category": "ui",
+      "files": [
+        "src/app/dashboard/"
+      ],
+      "dependencies": [
+        "UI-001"
+      ]
+    },
+    {
+      "id": "UI-003",
+      "name": "Editor Layout Mode",
+      "description": "WYSIWYG page layout (margins, headers/footers)",
+      "priority": "P1",
+      "phase": 2,
+      "effort": "8pts",
+      "passes": false,
+      "category": "editor",
+      "files": [
+        "src/components/editor/layout/"
+      ],
+      "dependencies": [
+        "BS-203"
+      ]
+    },
+    {
+      "id": "AI-001",
+      "name": "Prompt Sidekick Panel",
+      "description": "Rewrite, outline, title suggestions",
+      "priority": "P1",
+      "phase": 2,
+      "effort": "8pts",
+      "passes": false,
+      "category": "ai",
+      "files": [
+        "src/components/ai/sidekick/"
+      ],
+      "dependencies": [
+        "BS-203"
+      ]
+    },
+    {
+      "id": "AI-002",
+      "name": "Inline Coach",
+      "description": "Detect stuck users, suggest next actions",
+      "priority": "P2",
+      "phase": 2,
+      "effort": "5pts",
+      "passes": false,
+      "category": "ai",
+      "files": [
+        "src/components/ai/coach/"
+      ],
+      "dependencies": [
+        "BS-204"
+      ]
+    },
+    {
+      "id": "TEST-001",
+      "name": "E2E Test Setup",
+      "description": "Playwright configuration",
+      "priority": "P0",
+      "phase": 1,
+      "effort": "2pts",
+      "passes": false,
+      "category": "testing",
+      "files": [
+        "playwright.config.ts",
+        "e2e/"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "TEST-002",
+      "name": "Auth E2E Tests",
+      "description": "Signup, login, workspace creation tests",
+      "priority": "P0",
+      "phase": 1,
+      "effort": "3pts",
+      "passes": false,
+      "category": "testing",
+      "files": [
+        "e2e/auth.spec.ts"
+      ],
+      "dependencies": [
+        "TEST-001",
+        "BS-101"
+      ]
+    },
+    {
+      "id": "TEST-003",
+      "name": "Book Creation E2E",
+      "description": "Create book, add chapters, edit tests",
+      "priority": "P0",
+      "phase": 2,
+      "effort": "5pts",
+      "passes": false,
+      "category": "testing",
+      "files": [
+        "e2e/book.spec.ts"
+      ],
+      "dependencies": [
+        "TEST-001",
+        "BS-203"
+      ]
+    },
+    {
+      "id": "TEST-004",
+      "name": "Checkout E2E Tests",
+      "description": "Quote, checkout, order tracking tests",
+      "priority": "P0",
+      "phase": 5,
+      "effort": "5pts",
+      "passes": false,
+      "category": "testing",
+      "files": [
+        "e2e/checkout.spec.ts"
+      ],
+      "dependencies": [
+        "TEST-001",
+        "BS-502"
+      ]
+    }
+  ],
+  "lastUpdated": "2026-01-19T00:00:00.000Z"
+}
