@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* VelloPad 33/6 palette (Master Teacher) mapped to shadcn tokens */
+@layer base {
+  :root {
+    /* surfaces */
+    --background: 40 45% 94%;   /* cream paper (#F6F1E7) */
+    --foreground: 221 39% 11%;  /* charcoal ink (#111827) */
+
+    --card: 40 45% 96%;
+    --card-foreground: 221 39% 11%;
+
+    --popover: 40 45% 96%;
+    --popover-foreground: 221 39% 11%;
+
+    /* brand */
+    --primary: 248 26% 23%;     /* indigo (#2F2B4A) */
+    --primary-foreground: 40 45% 94%;
+
+    --secondary: 124 18% 36%;   /* sage (#4B6B4D) */
+    --secondary-foreground: 40 45% 94%;
+
+    --muted: 224 15% 92%;       /* soft silver */
+    --muted-foreground: 221 18% 32%;
+
+    --accent: 42 59% 60%;       /* soft gold (#D6B25E) */
+    --accent-foreground: 221 39% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 224 15% 86%;
+    --input: 224 15% 86%;
+    --ring: 42 59% 60%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 220 49% 8%;   /* deep night (#0B1220) */
+    --foreground: 40 45% 94%;
+
+    --card: 221 39% 11%;
+    --card-foreground: 40 45% 94%;
+
+    --popover: 221 39% 11%;
+    --popover-foreground: 40 45% 94%;
+
+    --primary: 251 53% 71%;     /* lavender (#9B8CDC) */
+    --primary-foreground: 248 26% 23%;
+
+    --secondary: 124 18% 36%;
+    --secondary-foreground: 40 45% 94%;
+
+    --muted: 224 15% 18%;
+    --muted-foreground: 224 12% 70%;
+
+    --accent: 42 59% 60%;
+    --accent-foreground: 220 49% 8%;
+
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 224 15% 20%;
+    --input: 224 15% 20%;
+    --ring: 42 59% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+}
