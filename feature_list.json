@@ -2,7 +2,7 @@
   "project": "VelloPad",
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
-  "totalFeatures": 44,
+  "totalFeatures": 69,
   "completedFeatures": 0,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
@@ -13,7 +13,9 @@
     "phase6_print": "Print Orchestrator (BS-EP06)",
     "phase7_messaging": "Admin Campaigns + Lifecycle Messaging (BS-EP07)",
     "phase8_marketing": "SEO Blog + Marketing Hub (BS-EP08)",
-    "phase9_reliability": "Analytics & Reliability (BS-EP09)"
+    "phase9_reliability": "Analytics & Reliability (BS-EP09)",
+    "phase10_multi_tenant": "Multi-tenant storefront architecture with branded subdomains",
+    "phase11_product_modes": "Product mode adapters (cover-only vs custom interior)"
   },
   "features": [
     {
@@ -727,7 +729,420 @@
         "TEST-001",
         "BS-502"
       ]
+    },
+    {
+      "id": "MT-001",
+      "name": "Tenant Hostname Resolution",
+      "description": "Next.js middleware to resolve tenant from Host header (vellopad.com, faith.vellopad.com, custom domains)",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/middleware.ts",
+        "src/lib/tenant/resolver.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "MT-002",
+      "name": "Tenants Database Schema",
+      "description": "tenants table with id, name, domains[], brand_kit_json, email_branding_id, enabled",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "3pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "DB-001"
+      ]
+    },
+    {
+      "id": "MT-003",
+      "name": "Brand Kit System",
+      "description": "Per-tenant colors, fonts, logo, favicon, homepage layout, tone of voice",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "8pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/lib/tenant/brand-kit.ts",
+        "src/components/theme-provider.tsx"
+      ],
+      "dependencies": [
+        "MT-001",
+        "MT-002"
+      ]
+    },
+    {
+      "id": "MT-004",
+      "name": "Tenant-Specific Homepage",
+      "description": "Hero variants, featured collections, social proof blocks per tenant",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "8pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/app/page.tsx",
+        "src/components/storefront/"
+      ],
+      "dependencies": [
+        "MT-003"
+      ]
+    },
+    {
+      "id": "MT-005",
+      "name": "Tenant Collections",
+      "description": "tenant_collections table linking tenants to curated product collections",
+      "priority": "P1",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "database",
+      "files": [
+        "supabase/migrations/",
+        "src/lib/tenant/collections.ts"
+      ],
+      "dependencies": [
+        "MT-002"
+      ]
+    },
+    {
+      "id": "MT-006",
+      "name": "Tenant Template Overrides",
+      "description": "Interior/cover templates with global defaults + tenant-specific overrides",
+      "priority": "P1",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "templates",
+      "files": [
+        "src/lib/templates/tenant-overrides.ts"
+      ],
+      "dependencies": [
+        "MT-002",
+        "BS-303"
+      ]
+    },
+    {
+      "id": "MT-007",
+      "name": "Row Level Security for Tenants",
+      "description": "Supabase RLS policies for tenant-aware data isolation",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "security",
+      "files": [
+        "supabase/migrations/"
+      ],
+      "dependencies": [
+        "MT-002"
+      ]
+    },
+    {
+      "id": "MT-008",
+      "name": "Tenant Email Branding",
+      "description": "Per-tenant from_name, from_email, header/footer templates, typography/colors",
+      "priority": "P0",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "email",
+      "files": [
+        "src/lib/email/tenant-branding.ts"
+      ],
+      "dependencies": [
+        "MT-002",
+        "BS-702"
+      ]
+    },
+    {
+      "id": "MT-009",
+      "name": "Subdomain Sending Domains",
+      "description": "Configure SPF/DKIM/DMARC for tenant-specific sending domains (mail.faith.vellopad.com)",
+      "priority": "P1",
+      "phase": 10,
+      "effort": "4pts",
+      "passes": false,
+      "category": "email",
+      "files": [
+        "src/lib/email/sending-domains.ts"
+      ],
+      "dependencies": [
+        "MT-008"
+      ]
+    },
+    {
+      "id": "MT-010",
+      "name": "Tenant-Aware Email Sequences",
+      "description": "Email templates selected by (tenant_id, lifecycle_event)",
+      "priority": "P1",
+      "phase": 10,
+      "effort": "5pts",
+      "passes": false,
+      "category": "email",
+      "files": [
+        "src/lib/email/lifecycle/"
+      ],
+      "dependencies": [
+        "MT-008",
+        "BS-702"
+      ]
+    },
+    {
+      "id": "MT-011",
+      "name": "Customer Signup Tenant Tracking",
+      "description": "Track signup_tenant_id and interests[] for culture-matching segmentation",
+      "priority": "P1",
+      "phase": 10,
+      "effort": "3pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/lib/auth/signup.ts"
+      ],
+      "dependencies": [
+        "MT-001",
+        "BS-101"
+      ]
+    },
+    {
+      "id": "MT-012",
+      "name": "Custom Domain Self-Serve",
+      "description": "Allow tenants to configure custom domains with DNS verification",
+      "priority": "P2",
+      "phase": 10,
+      "effort": "8pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/app/admin/domains/",
+        "src/lib/tenant/custom-domains.ts"
+      ],
+      "dependencies": [
+        "MT-001"
+      ]
+    },
+    {
+      "id": "MT-013",
+      "name": "Tenant Analytics Dashboard",
+      "description": "Per-tenant analytics with orders, revenue, conversion metrics",
+      "priority": "P2",
+      "phase": 10,
+      "effort": "8pts",
+      "passes": false,
+      "category": "analytics",
+      "files": [
+        "src/app/admin/analytics/"
+      ],
+      "dependencies": [
+        "MT-002",
+        "BS-701"
+      ]
+    },
+    {
+      "id": "PM-001",
+      "name": "Notebook Adapter Interface",
+      "description": "Base interface with capabilities, asset requirements, quote, createOrder, getStatus, preflight",
+      "priority": "P0",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "adapters",
+      "files": [
+        "src/lib/adapters/notebook-adapter.ts"
+      ],
+      "dependencies": [
+        "BS-601"
+      ]
+    },
+    {
+      "id": "PM-002",
+      "name": "Cover-Only Notebook Adapter",
+      "description": "Mode B adapter: user customizes cover, uses pre-approved stock interior PDF",
+      "priority": "P0",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "adapters",
+      "files": [
+        "src/lib/adapters/cover-only-adapter.ts"
+      ],
+      "dependencies": [
+        "PM-001"
+      ]
+    },
+    {
+      "id": "PM-003",
+      "name": "Custom Interior Notebook Adapter",
+      "description": "Mode A adapter: user edits pages (planner layouts, prompts, etc), generates print-ready interior PDF",
+      "priority": "P1",
+      "phase": 11,
+      "effort": "13pts",
+      "passes": false,
+      "category": "adapters",
+      "files": [
+        "src/lib/adapters/custom-interior-adapter.ts"
+      ],
+      "dependencies": [
+        "PM-001",
+        "BS-401"
+      ]
+    },
+    {
+      "id": "PM-004",
+      "name": "Stock Interior Library",
+      "description": "Pre-approved interior PDFs (lined, dotted, blank, planner v1) for cover-only mode",
+      "priority": "P0",
+      "phase": 11,
+      "effort": "3pts",
+      "passes": false,
+      "category": "assets",
+      "files": [
+        "src/lib/interiors/stock-library.ts"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "PM-005",
+      "name": "Interior PDF Render Service",
+      "description": "Generate print-ready multi-page interior PDF from user's page editor content",
+      "priority": "P1",
+      "phase": 11,
+      "effort": "13pts",
+      "passes": false,
+      "category": "rendition",
+      "files": [
+        "src/lib/rendition/interior-renderer.ts"
+      ],
+      "dependencies": [
+        "BS-401",
+        "PM-003"
+      ]
+    },
+    {
+      "id": "PM-006",
+      "name": "Interior Template Versioning",
+      "description": "Store template versions so reprints reproduce exactly",
+      "priority": "P1",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "versioning",
+      "files": [
+        "src/lib/templates/versioning.ts"
+      ],
+      "dependencies": [
+        "BS-205",
+        "PM-003"
+      ]
+    },
+    {
+      "id": "PM-007",
+      "name": "Spiral Binding Preflight",
+      "description": "Validate margins near spiral edge, bleed zones, DPI for spiral-bound notebooks",
+      "priority": "P0",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "rendition",
+      "files": [
+        "src/lib/rendition/preflight-spiral.ts"
+      ],
+      "dependencies": [
+        "BS-402"
+      ]
+    },
+    {
+      "id": "PM-008",
+      "name": "Product Mode Capabilities",
+      "description": "supportsCoverOnly, supportsCustomInterior, supportsSpiralBinding, allowedSizes, paperTypes, pageCounts",
+      "priority": "P0",
+      "phase": 11,
+      "effort": "3pts",
+      "passes": false,
+      "category": "adapters",
+      "files": [
+        "src/lib/adapters/capabilities.ts"
+      ],
+      "dependencies": [
+        "PM-001"
+      ]
+    },
+    {
+      "id": "PM-009",
+      "name": "Print Provider Adapter Composition",
+      "description": "Compose product mode + print provider adapters (e.g., CustomInterior + Prodigi)",
+      "priority": "P1",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "adapters",
+      "files": [
+        "src/lib/adapters/composer.ts"
+      ],
+      "dependencies": [
+        "PM-001",
+        "PM-002",
+        "BS-602"
+      ]
+    },
+    {
+      "id": "PM-010",
+      "name": "Niche Template Marketplace",
+      "description": "Faith templates, teacher templates, fitness templates per tenant niche",
+      "priority": "P2",
+      "phase": 11,
+      "effort": "8pts",
+      "passes": false,
+      "category": "templates",
+      "files": [
+        "src/app/templates/marketplace/"
+      ],
+      "dependencies": [
+        "MT-006",
+        "PM-003"
+      ]
+    },
+    {
+      "id": "PM-011",
+      "name": "User Preference Self-Select",
+      "description": "'What are you using this for?' preference selection for culture-matching",
+      "priority": "P1",
+      "phase": 11,
+      "effort": "3pts",
+      "passes": false,
+      "category": "multi-tenant",
+      "files": [
+        "src/components/onboarding/preferences.tsx"
+      ],
+      "dependencies": [
+        "MT-011"
+      ]
+    },
+    {
+      "id": "PM-012",
+      "name": "Niche Landing Pages",
+      "description": "Tailored landing pages for niche use-cases (prayer journal, bible study notes, sermon notes)",
+      "priority": "P2",
+      "phase": 11,
+      "effort": "5pts",
+      "passes": false,
+      "category": "marketing",
+      "files": [
+        "src/app/landing/"
+      ],
+      "dependencies": [
+        "MT-004"
+      ]
     }
   ],
-  "lastUpdated": "2026-01-19T00:00:00.000Z"
+  "lastUpdated": "2026-01-20T00:00:00.000Z"
 }
