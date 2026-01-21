@@ -1,9 +1,37 @@
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { getWorkspaces, getDefaultWorkspace } from '@/lib/auth/workspaces';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, FileCheck, ShoppingCart, TrendingUp } from "lucide-react";
+import Link from 'next/link';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/auth/login');
+  }
+
+  const workspaces = await getWorkspaces(user.id);
+  const defaultWorkspace = await getDefaultWorkspace(user.id);
+
+  // Fetch user's books
+  const { data: books } = await supabase
+    .from('books')
+    .select('*')
+    .eq('workspace_id', defaultWorkspace?.id)
+    .order('updated_at', { ascending: false })
+    .limit(3);
+
+  const totalBooks = books?.length || 0;
+  const booksInProgress = books?.filter(b => b.completion_percent < 100).length || 0;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
@@ -14,8 +42,14 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button>Create Book</Button>
-          <Button variant="secondary">Resume Writing</Button>
+          <Button asChild>
+            <Link href="/books/new">Create Book</Link>
+          </Button>
+          {books && books.length > 0 && (
+            <Button variant="secondary" asChild>
+              <Link href={`/books/${books[0].id}`}>Resume Writing</Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -26,8 +60,10 @@ export default function DashboardPage() {
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">+1 from last week</p>
+            <div className="text-2xl font-bold">{booksInProgress}</div>
+            <p className="text-xs text-muted-foreground">
+              {booksInProgress === 0 ? 'Start your first book' : `${booksInProgress} active project${booksInProgress !== 1 ? 's' : ''}`}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -89,29 +125,37 @@ export default function DashboardPage() {
             <CardTitle className="text-sm">Recent Books</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {[
-              { title: "The VelloPad Guide", progress: 62, stage: "Drafting" },
-              { title: "30 Day Journal", progress: 18, stage: "Idea" },
-              { title: "Mini Cookbook", progress: 91, stage: "Ready to print" },
-            ].map((book) => (
-              <div key={book.title} className="flex items-center gap-4">
-                <div className="flex-1">
-                  <div className="font-medium text-sm">{book.title}</div>
-                  <div className="text-xs text-muted-foreground">{book.stage}</div>
-                </div>
-                <div className="w-24">
-                  <div className="text-xs text-muted-foreground text-right mb-1">
-                    {book.progress}%
+            {books && books.length > 0 ? (
+              books.map((book) => (
+                <Link
+                  key={book.id}
+                  href={`/books/${book.id}`}
+                  className="flex items-center gap-4 rounded-lg transition-colors hover:bg-muted p-2 -m-2"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">{book.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {book.word_count} words
+                    </div>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted">
-                    <div
-                      className="h-2 rounded-full bg-primary"
-                      style={{ width: `${book.progress}%` }}
-                    />
+                  <div className="w-24">
+                    <div className="text-xs text-muted-foreground text-right mb-1">
+                      {book.completion_percent}%
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-muted">
+                      <div
+                        className="h-2 rounded-full bg-primary"
+                        style={{ width: `${book.completion_percent}%` }}
+                      />
+                    </div>
                   </div>
-                </div>
+                </Link>
+              ))
+            ) : (
+              <div className="text-center text-sm text-muted-foreground py-4">
+                No books yet. Create your first book to get started!
               </div>
-            ))}
+            )}
           </CardContent>
         </Card>
 

@@ -1,9 +1,10 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { handleCheckoutSuccess, handleCheckoutFailure } from "@/lib/stripe/checkout";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
+  apiVersion: "2025-02-24.acacia",
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -26,11 +27,17 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        // Handle successful checkout
-        // - Create order in database
-        // - Send confirmation email
-        // - Trigger print job if applicable
-        console.log("Checkout completed:", session.id);
+        // BS-502: Handle successful checkout
+        await handleCheckoutSuccess(session.id);
+        console.log("✅ Checkout completed:", session.id);
+        break;
+      }
+
+      case "checkout.session.expired": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        // BS-502: Handle expired checkout
+        await handleCheckoutFailure(session.id);
+        console.log("❌ Checkout expired:", session.id);
         break;
       }
 

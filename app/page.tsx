@@ -1,8 +1,37 @@
+import { headers } from 'next/headers'
+import { getTenantById } from '@/lib/tenant/resolver'
+import { getBrandKit } from '@/lib/tenant/brand-kit'
+import { TenantHomepage } from '@/components/storefront/TenantHomepage'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Sparkles, TrendingUp, Truck } from "lucide-react";
 
-export default function HomePage() {
+/**
+ * Homepage - Tenant-aware
+ * Shows different content based on the tenant (subdomain or custom domain)
+ */
+export default async function HomePage() {
+  // Get tenant from middleware headers
+  const headersList = await headers()
+  const tenantId = headersList.get('x-tenant-id')
+
+  // If we have a tenant ID, fetch the full tenant data
+  let tenant = null
+  if (tenantId) {
+    tenant = await getTenantById(tenantId)
+  }
+
+  // If tenant exists and has brand kit, use tenant-specific homepage
+  if (tenant && tenant.brand_kit) {
+    const brandKit = getBrandKit(tenant)
+    return <TenantHomepage tenant={tenant} brandKit={brandKit} />
+  }
+
+  // Default VelloPad homepage (when no tenant or no brand kit)
+  return renderDefaultHomepage()
+}
+
+function renderDefaultHomepage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}

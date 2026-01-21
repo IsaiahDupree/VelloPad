@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 114,
-  "completedFeatures": 0,
+  "completedFeatures": 54,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -28,7 +28,7 @@
       "priority": "P0",
       "phase": 1,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "auth",
       "files": [
         "src/app/auth/",
@@ -43,10 +43,11 @@
       "priority": "P1",
       "phase": 1,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "auth",
       "files": [
-        "src/lib/workspace/roles.ts"
+        "lib/workspace/roles.ts",
+        "app/api/workspaces/[workspaceId]/members/route.ts"
       ],
       "dependencies": [
         "BS-101"
@@ -59,10 +60,11 @@
       "priority": "P1",
       "phase": 1,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "settings",
       "files": [
-        "src/app/settings/"
+        "app/(app)/settings/page.tsx",
+        "components/settings/"
       ],
       "dependencies": [
         "BS-101"
@@ -75,7 +77,7 @@
       "priority": "P0",
       "phase": 2,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "book",
       "files": [
         "src/app/books/new/"
@@ -91,7 +93,7 @@
       "priority": "P0",
       "phase": 2,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "book",
       "files": [
         "src/components/outline/"
@@ -107,7 +109,7 @@
       "priority": "P0",
       "phase": 2,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "editor",
       "files": [
         "src/components/editor/"
@@ -123,7 +125,7 @@
       "priority": "P1",
       "phase": 2,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "dashboard",
       "files": [
         "src/app/books/[id]/"
@@ -140,7 +142,7 @@
       "priority": "P1",
       "phase": 2,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "versioning",
       "files": [
         "src/lib/versions/"
@@ -156,7 +158,7 @@
       "priority": "P0",
       "phase": 3,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "assets",
       "files": [
         "src/components/assets/",
@@ -174,7 +176,7 @@
       "priority": "P1",
       "phase": 3,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "assets",
       "files": [
         "src/lib/assets/quality.ts"
@@ -190,7 +192,7 @@
       "priority": "P1",
       "phase": 3,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "templates",
       "files": [
         "src/lib/templates/"
@@ -206,7 +208,7 @@
       "priority": "P1",
       "phase": 3,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "cover",
       "files": [
         "src/components/cover/"
@@ -222,7 +224,7 @@
       "priority": "P0",
       "phase": 4,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "rendition",
       "files": [
         "src/lib/rendition/queue.ts"
@@ -239,7 +241,7 @@
       "priority": "P0",
       "phase": 4,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "rendition",
       "files": [
         "src/lib/rendition/preflight.ts"
@@ -256,10 +258,12 @@
       "priority": "P1",
       "phase": 4,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "preview",
       "files": [
-        "src/components/preview/"
+        "components/preview/BookPreview.tsx",
+        "app/(app)/books/[id]/preview/page.tsx",
+        "app/api/books/[bookId]/preview/route.ts"
       ],
       "dependencies": [
         "BS-203"
@@ -272,10 +276,14 @@
       "priority": "P0",
       "phase": 5,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "commerce",
       "files": [
-        "src/app/api/quote/"
+        "lib/commerce/quotes.ts",
+        "app/api/quote/route.ts",
+        "components/commerce/QuoteForm.tsx",
+        "components/commerce/QuoteComparison.tsx",
+        "app/(app)/books/[id]/order/page.tsx"
       ],
       "dependencies": [
         "BS-401",
@@ -290,11 +298,12 @@
       "priority": "P0",
       "phase": 5,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "commerce",
       "files": [
-        "src/app/api/checkout/",
-        "src/lib/stripe/"
+        "lib/stripe/checkout.ts",
+        "app/api/checkout/route.ts",
+        "app/api/webhooks/stripe/route.ts"
       ],
       "dependencies": [
         "BS-501"
@@ -307,10 +316,11 @@
       "priority": "P0",
       "phase": 5,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "orders",
       "files": [
-        "src/app/orders/[id]/"
+        "lib/commerce/orders.ts",
+        "app/(app)/orders/[id]/page.tsx"
       ],
       "dependencies": [
         "BS-502",
@@ -324,10 +334,13 @@
       "priority": "P1",
       "phase": 5,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "orders",
       "files": [
-        "src/app/orders/reorder/"
+        "lib/commerce/reorder.ts",
+        "app/api/orders/[id]/reorder/route.ts",
+        "components/commerce/ReorderButton.tsx",
+        "supabase/migrations/20260121000006_add_reorder_support.sql"
       ],
       "dependencies": [
         "BS-503"
@@ -340,7 +353,7 @@
       "priority": "P0",
       "phase": 6,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "print",
       "files": [
         "src/lib/print/orchestrator.ts"
@@ -356,7 +369,7 @@
       "priority": "P0",
       "phase": 6,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "print",
       "files": [
         "src/lib/print/adapters/"
@@ -372,7 +385,7 @@
       "priority": "P0",
       "phase": 6,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "print",
       "files": [
         "src/app/api/webhooks/print/"
@@ -388,7 +401,7 @@
       "priority": "P1",
       "phase": 6,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "print",
       "files": [
         "src/lib/print/polling.ts"
@@ -404,7 +417,7 @@
       "priority": "P0",
       "phase": 7,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "analytics",
       "files": [
         "src/lib/events/"
@@ -420,10 +433,13 @@
       "priority": "P0",
       "phase": 7,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "email",
       "files": [
-        "src/lib/email/lifecycle/"
+        "lib/email/lifecycle/index.ts",
+        "lib/email/lifecycle/README.md",
+        "app/api/emails/send/route.ts",
+        "app/api/cron/emails/route.ts"
       ],
       "dependencies": [
         "BS-701",
@@ -484,10 +500,12 @@
       "priority": "P0",
       "phase": 9,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "reliability",
       "files": [
-        "src/lib/jobs/monitoring.ts"
+        "lib/jobs/monitoring.ts",
+        "app/api/jobs/stats/route.ts",
+        "app/api/jobs/logs/route.ts"
       ],
       "dependencies": [
         "BS-401"
@@ -517,7 +535,7 @@
       "priority": "P0",
       "phase": 1,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -531,7 +549,7 @@
       "priority": "P0",
       "phase": 3,
       "effort": "2pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -547,7 +565,7 @@
       "priority": "P0",
       "phase": 4,
       "effort": "2pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -563,7 +581,7 @@
       "priority": "P0",
       "phase": 5,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -579,7 +597,7 @@
       "priority": "P0",
       "phase": 7,
       "effort": "2pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -595,7 +613,7 @@
       "priority": "P0",
       "phase": 1,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "ui",
       "files": [
         "src/app/globals.css",
@@ -610,7 +628,7 @@
       "priority": "P0",
       "phase": 2,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "ui",
       "files": [
         "src/app/dashboard/"
@@ -674,7 +692,7 @@
       "priority": "P0",
       "phase": 1,
       "effort": "2pts",
-      "passes": false,
+      "passes": true,
       "category": "testing",
       "files": [
         "playwright.config.ts",
@@ -689,7 +707,7 @@
       "priority": "P0",
       "phase": 1,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "testing",
       "files": [
         "e2e/auth.spec.ts"
@@ -706,7 +724,7 @@
       "priority": "P0",
       "phase": 2,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "testing",
       "files": [
         "e2e/book.spec.ts"
@@ -723,7 +741,7 @@
       "priority": "P0",
       "phase": 5,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "testing",
       "files": [
         "e2e/checkout.spec.ts"
@@ -740,7 +758,7 @@
       "priority": "P0",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "multi-tenant",
       "files": [
         "src/middleware.ts",
@@ -755,7 +773,7 @@
       "priority": "P0",
       "phase": 10,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/"
@@ -771,7 +789,7 @@
       "priority": "P0",
       "phase": 10,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "multi-tenant",
       "files": [
         "src/lib/tenant/brand-kit.ts",
@@ -789,7 +807,7 @@
       "priority": "P0",
       "phase": 10,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "multi-tenant",
       "files": [
         "src/app/page.tsx",
@@ -840,7 +858,7 @@
       "priority": "P0",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "security",
       "files": [
         "supabase/migrations/"
@@ -856,10 +874,12 @@
       "priority": "P0",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "email",
       "files": [
-        "src/lib/email/tenant-branding.ts"
+        "lib/email/tenant-branding.ts",
+        "lib/email/tenant-branding.README.md",
+        "lib/email/lifecycle/index.ts"
       ],
       "dependencies": [
         "MT-002",
@@ -957,10 +977,11 @@
       "priority": "P0",
       "phase": 11,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "adapters",
       "files": [
-        "src/lib/adapters/notebook-adapter.ts"
+        "lib/adapters/notebook-adapter.ts",
+        "lib/adapters/README.md"
       ],
       "dependencies": [
         "BS-601"
@@ -973,10 +994,10 @@
       "priority": "P0",
       "phase": 11,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "adapters",
       "files": [
-        "src/lib/adapters/cover-only-adapter.ts"
+        "lib/adapters/cover-only-adapter.ts"
       ],
       "dependencies": [
         "PM-001"
@@ -1006,10 +1027,11 @@
       "priority": "P0",
       "phase": 11,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "assets",
       "files": [
-        "src/lib/interiors/stock-library.ts"
+        "lib/interiors/stock-library.ts",
+        "lib/interiors/README.md"
       ],
       "dependencies": []
     },
@@ -1054,10 +1076,11 @@
       "priority": "P0",
       "phase": 11,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "rendition",
       "files": [
-        "src/lib/rendition/preflight-spiral.ts"
+        "lib/rendition/preflight-spiral.ts",
+        "lib/rendition/preflight-spiral.README.md"
       ],
       "dependencies": [
         "BS-402"
@@ -1070,10 +1093,11 @@
       "priority": "P0",
       "phase": 11,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "adapters",
       "files": [
-        "src/lib/adapters/capabilities.ts"
+        "lib/adapters/capabilities.ts",
+        "lib/adapters/capabilities.README.md"
       ],
       "dependencies": [
         "PM-001"
@@ -1153,9 +1177,15 @@
       "priority": "P0",
       "phase": 12,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/app/photo-book/upload/"],
+      "files": [
+        "app/(app)/photo-book/upload/page.tsx",
+        "components/photo-book/PhotoUploader.tsx",
+        "app/api/photo-book/projects/route.ts",
+        "app/api/photo-book/projects/[projectId]/photos/route.ts",
+        "supabase/migrations/20260121000010_add_photo_book_schema.sql"
+      ],
       "dependencies": []
     },
     {
@@ -1167,8 +1197,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/cloud-import/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "src/lib/cloud-import/"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-003",
@@ -1179,8 +1213,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/exif/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "src/lib/exif/"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-004",
@@ -1189,10 +1227,16 @@
       "priority": "P0",
       "phase": 12,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/lib/image-processing/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "lib/image-processing/optimizer.ts",
+        "lib/image-processing/server-optimizer.ts",
+        "lib/image-processing/README.md"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-005",
@@ -1201,9 +1245,15 @@
       "priority": "P0",
       "phase": 12,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/lib/storage/"],
+      "files": [
+        "lib/storage/index.ts",
+        "lib/storage/providers/supabase.ts",
+        "lib/storage/providers/s3.ts",
+        "lib/storage/providers/r2.ts",
+        "lib/storage/README.md"
+      ],
       "dependencies": []
     },
     {
@@ -1213,10 +1263,16 @@
       "priority": "P0",
       "phase": 12,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/lib/layout-engine/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "lib/layout-engine/",
+        "app/api/photo-book/projects/[projectId]/layout/route.ts",
+        "e2e/layout-engine.spec.ts"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-007",
@@ -1225,10 +1281,14 @@
       "priority": "P0",
       "phase": 12,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/templates/photo-book/"],
-      "dependencies": ["PB-006"]
+      "files": [
+        "src/templates/photo-book/"
+      ],
+      "dependencies": [
+        "PB-006"
+      ]
     },
     {
       "id": "PB-008",
@@ -1239,8 +1299,12 @@
       "effort": "3pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/caption-generator/"],
-      "dependencies": ["PB-003"]
+      "files": [
+        "src/lib/caption-generator/"
+      ],
+      "dependencies": [
+        "PB-003"
+      ]
     },
     {
       "id": "PB-009",
@@ -1249,10 +1313,14 @@
       "priority": "P0",
       "phase": 12,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
-      "files": ["src/components/photo-book/cover-editor/"],
-      "dependencies": ["PB-007"]
+      "files": [
+        "src/components/photo-book/cover-editor/"
+      ],
+      "dependencies": [
+        "PB-007"
+      ]
     },
     {
       "id": "PB-010",
@@ -1263,8 +1331,13 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/pdf-generator/"],
-      "dependencies": ["PB-006", "PB-009"]
+      "files": [
+        "src/lib/pdf-generator/"
+      ],
+      "dependencies": [
+        "PB-006",
+        "PB-009"
+      ]
     },
     {
       "id": "PB-011",
@@ -1275,8 +1348,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/pdf-generator/sizes.ts"],
-      "dependencies": ["PB-010"]
+      "files": [
+        "src/lib/pdf-generator/sizes.ts"
+      ],
+      "dependencies": [
+        "PB-010"
+      ]
     },
     {
       "id": "PB-012",
@@ -1287,8 +1364,12 @@
       "effort": "3pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/print-options/"],
-      "dependencies": ["PB-010"]
+      "files": [
+        "src/lib/print-options/"
+      ],
+      "dependencies": [
+        "PB-010"
+      ]
     },
     {
       "id": "PB-013",
@@ -1299,8 +1380,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/providers/prodigi/"],
-      "dependencies": ["PB-010"]
+      "files": [
+        "src/lib/providers/prodigi/"
+      ],
+      "dependencies": [
+        "PB-010"
+      ]
     },
     {
       "id": "PB-014",
@@ -1311,8 +1396,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/providers/prodigi/shipping.ts"],
-      "dependencies": ["PB-013"]
+      "files": [
+        "src/lib/providers/prodigi/shipping.ts"
+      ],
+      "dependencies": [
+        "PB-013"
+      ]
     },
     {
       "id": "PB-015",
@@ -1323,8 +1412,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/api/webhooks/prodigi/"],
-      "dependencies": ["PB-013"]
+      "files": [
+        "src/app/api/webhooks/prodigi/"
+      ],
+      "dependencies": [
+        "PB-013"
+      ]
     },
     {
       "id": "PB-016",
@@ -1335,8 +1428,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/photo-book/dashboard/"],
-      "dependencies": ["PB-013"]
+      "files": [
+        "src/app/photo-book/dashboard/"
+      ],
+      "dependencies": [
+        "PB-013"
+      ]
     },
     {
       "id": "PB-017",
@@ -1347,8 +1444,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/preview/"],
-      "dependencies": ["PB-006"]
+      "files": [
+        "src/components/photo-book/preview/"
+      ],
+      "dependencies": [
+        "PB-006"
+      ]
     },
     {
       "id": "PB-018",
@@ -1359,8 +1460,12 @@
       "effort": "3pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/api/photo-book/download/"],
-      "dependencies": ["PB-010"]
+      "files": [
+        "src/app/api/photo-book/download/"
+      ],
+      "dependencies": [
+        "PB-010"
+      ]
     },
     {
       "id": "PB-019",
@@ -1371,8 +1476,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/editor/"],
-      "dependencies": ["PB-006"]
+      "files": [
+        "src/components/photo-book/editor/"
+      ],
+      "dependencies": [
+        "PB-006"
+      ]
     },
     {
       "id": "PB-020",
@@ -1383,8 +1492,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/page-sorter/"],
-      "dependencies": ["PB-019"]
+      "files": [
+        "src/components/photo-book/page-sorter/"
+      ],
+      "dependencies": [
+        "PB-019"
+      ]
     },
     {
       "id": "PB-021",
@@ -1395,8 +1508,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/text-editor/"],
-      "dependencies": ["PB-019"]
+      "files": [
+        "src/components/photo-book/text-editor/"
+      ],
+      "dependencies": [
+        "PB-019"
+      ]
     },
     {
       "id": "PB-022",
@@ -1407,8 +1524,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/image-filters/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "src/lib/image-filters/"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-023",
@@ -1419,8 +1540,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/image-tools/"],
-      "dependencies": ["PB-019"]
+      "files": [
+        "src/components/photo-book/image-tools/"
+      ],
+      "dependencies": [
+        "PB-019"
+      ]
     },
     {
       "id": "PB-024",
@@ -1431,8 +1556,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/ai/photo-selection/"],
-      "dependencies": ["PB-001"]
+      "files": [
+        "src/lib/ai/photo-selection/"
+      ],
+      "dependencies": [
+        "PB-001"
+      ]
     },
     {
       "id": "PB-025",
@@ -1443,8 +1572,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/ai/auto-enhance/"],
-      "dependencies": ["PB-024"]
+      "files": [
+        "src/lib/ai/auto-enhance/"
+      ],
+      "dependencies": [
+        "PB-024"
+      ]
     },
     {
       "id": "PB-026",
@@ -1455,8 +1588,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/ai/face-detection/"],
-      "dependencies": ["PB-024"]
+      "files": [
+        "src/lib/ai/face-detection/"
+      ],
+      "dependencies": [
+        "PB-024"
+      ]
     },
     {
       "id": "PB-027",
@@ -1467,8 +1604,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/ai/caption-ai/"],
-      "dependencies": ["PB-024"]
+      "files": [
+        "src/lib/ai/caption-ai/"
+      ],
+      "dependencies": [
+        "PB-024"
+      ]
     },
     {
       "id": "PB-028",
@@ -1479,8 +1620,12 @@
       "effort": "3pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/photo-book/share/"],
-      "dependencies": ["PB-017"]
+      "files": [
+        "src/app/photo-book/share/"
+      ],
+      "dependencies": [
+        "PB-017"
+      ]
     },
     {
       "id": "PB-029",
@@ -1491,8 +1636,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/collaboration/"],
-      "dependencies": ["PB-019"]
+      "files": [
+        "src/lib/collaboration/"
+      ],
+      "dependencies": [
+        "PB-019"
+      ]
     },
     {
       "id": "PB-030",
@@ -1503,8 +1652,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/approval-workflow/"],
-      "dependencies": ["PB-029"]
+      "files": [
+        "src/lib/approval-workflow/"
+      ],
+      "dependencies": [
+        "PB-029"
+      ]
     },
     {
       "id": "PB-031",
@@ -1515,8 +1668,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/components/photo-book/comments/"],
-      "dependencies": ["PB-029"]
+      "files": [
+        "src/components/photo-book/comments/"
+      ],
+      "dependencies": [
+        "PB-029"
+      ]
     },
     {
       "id": "PB-032",
@@ -1527,8 +1684,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/providers/gelato/"],
-      "dependencies": ["PB-013"]
+      "files": [
+        "src/lib/providers/gelato/"
+      ],
+      "dependencies": [
+        "PB-013"
+      ]
     },
     {
       "id": "PB-033",
@@ -1539,8 +1700,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/providers/price-compare.ts"],
-      "dependencies": ["PB-032"]
+      "files": [
+        "src/lib/providers/price-compare.ts"
+      ],
+      "dependencies": [
+        "PB-032"
+      ]
     },
     {
       "id": "PB-034",
@@ -1551,8 +1716,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/providers/failover.ts"],
-      "dependencies": ["PB-032"]
+      "files": [
+        "src/lib/providers/failover.ts"
+      ],
+      "dependencies": [
+        "PB-032"
+      ]
     },
     {
       "id": "PB-035",
@@ -1563,8 +1732,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/photo-book/marketplace/"],
-      "dependencies": ["PB-007"]
+      "files": [
+        "src/app/photo-book/marketplace/"
+      ],
+      "dependencies": [
+        "PB-007"
+      ]
     },
     {
       "id": "PB-036",
@@ -1575,8 +1748,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/photo-book/my-templates/"],
-      "dependencies": ["PB-035"]
+      "files": [
+        "src/app/photo-book/my-templates/"
+      ],
+      "dependencies": [
+        "PB-035"
+      ]
     },
     {
       "id": "PB-037",
@@ -1587,8 +1764,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/templates/photo-book/seasonal/"],
-      "dependencies": ["PB-035"]
+      "files": [
+        "src/templates/photo-book/seasonal/"
+      ],
+      "dependencies": [
+        "PB-035"
+      ]
     },
     {
       "id": "PB-038",
@@ -1599,8 +1780,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/brand-kit/"],
-      "dependencies": ["PB-021"]
+      "files": [
+        "src/lib/brand-kit/"
+      ],
+      "dependencies": [
+        "PB-021"
+      ]
     },
     {
       "id": "PB-039",
@@ -1611,8 +1796,13 @@
       "effort": "21pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/white-label/"],
-      "dependencies": ["PB-035", "MT-001"]
+      "files": [
+        "src/app/white-label/"
+      ],
+      "dependencies": [
+        "PB-035",
+        "MT-001"
+      ]
     },
     {
       "id": "PB-040",
@@ -1623,8 +1813,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/bulk-orders/"],
-      "dependencies": ["PB-013"]
+      "files": [
+        "src/lib/bulk-orders/"
+      ],
+      "dependencies": [
+        "PB-013"
+      ]
     },
     {
       "id": "PB-041",
@@ -1635,8 +1829,12 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/client-portal/"],
-      "dependencies": ["PB-030"]
+      "files": [
+        "src/app/client-portal/"
+      ],
+      "dependencies": [
+        "PB-030"
+      ]
     },
     {
       "id": "PB-042",
@@ -1647,8 +1845,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/invoicing/"],
-      "dependencies": ["PB-040"]
+      "files": [
+        "src/lib/invoicing/"
+      ],
+      "dependencies": [
+        "PB-040"
+      ]
     },
     {
       "id": "PB-043",
@@ -1659,8 +1861,12 @@
       "effort": "5pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/lib/pricing/reseller.ts"],
-      "dependencies": ["PB-039"]
+      "files": [
+        "src/lib/pricing/reseller.ts"
+      ],
+      "dependencies": [
+        "PB-039"
+      ]
     },
     {
       "id": "PB-044",
@@ -1671,8 +1877,13 @@
       "effort": "13pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/api/v1/photo-book/"],
-      "dependencies": ["PB-010", "PB-013"]
+      "files": [
+        "src/app/api/v1/photo-book/"
+      ],
+      "dependencies": [
+        "PB-010",
+        "PB-013"
+      ]
     },
     {
       "id": "PB-045",
@@ -1683,8 +1894,12 @@
       "effort": "8pts",
       "passes": false,
       "category": "photo-book",
-      "files": ["src/app/photo-book/analytics/"],
-      "dependencies": ["PB-016"]
+      "files": [
+        "src/app/photo-book/analytics/"
+      ],
+      "dependencies": [
+        "PB-016"
+      ]
     }
   ],
   "lastUpdated": "2026-01-20T00:00:00.000Z"
