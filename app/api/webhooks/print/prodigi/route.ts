@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { headers } from 'next/headers';
+import { logWebhookEvent } from '@/lib/audit';
 
 /**
  * Prodigi Webhook Handler
- * Feature: BS-603
+ * Feature: BS-603 + BS-902
  *
  * Handles webhook notifications from Prodigi for order status updates
+ * Logs all events with PII redaction for audit compliance
  *
  * Webhook Events:
  * - order.created
@@ -46,15 +48,30 @@ interface ProdigiWebhookPayload {
 }
 
 export async function POST(request: NextRequest) {
+  const headersList = await headers();
+  const signature = headersList.get('x-prodigi-signature');
+  const ipAddress = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || undefined;
+  const userAgent = headersList.get("user-agent") || undefined;
+
   try {
-    const headersList = await headers();
-    const signature = headersList.get('x-prodigi-signature');
     const body = await request.text();
 
     // Verify webhook signature
     const isValid = await verifyProdigiSignature(body, signature);
     if (!isValid) {
       console.error('Invalid webhook signature');
+
+      // BS-902: Log failed signature verification
+      await logWebhookEvent({
+        provider: 'prodigi',
+        eventType: 'signature_verification_failed',
+        payload: { signature },
+        status: 'failure',
+        errorMessage: 'Invalid webhook signature',
+        ipAddress,
+        userAgent,
+      });
+
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 401 }
@@ -67,12 +84,36 @@ export async function POST(request: NextRequest) {
     // Process the webhook
     const result = await processProdigiWebhook(payload);
 
+    // BS-902: Log webhook event with PII redaction
+    await logWebhookEvent({
+      provider: 'prodigi',
+      eventType: payload.event,
+      orderId: payload.orderId,
+      payload: payload as unknown as Record<string, any>,
+      status: result ? 'success' : 'failure',
+      errorMessage: result ? undefined : 'Failed to process webhook',
+      ipAddress,
+      userAgent,
+    });
+
     return NextResponse.json({
       received: true,
       processed: result
     });
   } catch (error) {
     console.error('Error processing Prodigi webhook:', error);
+
+    // BS-902: Log processing error
+    await logWebhookEvent({
+      provider: 'prodigi',
+      eventType: 'processing_error',
+      payload: {},
+      status: 'failure',
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      ipAddress,
+      userAgent,
+    });
+
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }

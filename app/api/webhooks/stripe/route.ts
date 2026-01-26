@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { handleCheckoutSuccess, handleCheckoutFailure } from "@/lib/stripe/checkout";
+import { logWebhookEvent } from "@/lib/audit";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
@@ -13,6 +14,8 @@ export async function POST(req: Request) {
   const body = await req.text();
   const headersList = await headers();
   const signature = headersList.get("stripe-signature")!;
+  const ipAddress = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || undefined;
+  const userAgent = headersList.get("user-agent") || undefined;
 
   let event: Stripe.Event;
 
@@ -20,24 +23,49 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
+
+    // Log failed webhook verification
+    await logWebhookEvent({
+      provider: 'stripe',
+      eventType: 'signature_verification_failed',
+      payload: { error: err instanceof Error ? err.message : 'Unknown error' },
+      status: 'failure',
+      errorMessage: err instanceof Error ? err.message : 'Signature verification failed',
+      ipAddress,
+      userAgent,
+    });
+
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   try {
+    let orderId: string | undefined;
+    let processingError: Error | undefined;
+
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        // BS-502: Handle successful checkout
-        await handleCheckoutSuccess(session.id);
-        console.log("✅ Checkout completed:", session.id);
+        try {
+          // BS-502: Handle successful checkout
+          await handleCheckoutSuccess(session.id);
+          console.log("✅ Checkout completed:", session.id);
+          orderId = session.metadata?.orderId;
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
         break;
       }
 
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
-        // BS-502: Handle expired checkout
-        await handleCheckoutFailure(session.id);
-        console.log("❌ Checkout expired:", session.id);
+        try {
+          // BS-502: Handle expired checkout
+          await handleCheckoutFailure(session.id);
+          console.log("❌ Checkout expired:", session.id);
+          orderId = session.metadata?.orderId;
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
         break;
       }
 
@@ -45,6 +73,7 @@ export async function POST(req: Request) {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         // Handle successful payment
         console.log("Payment succeeded:", paymentIntent.id);
+        orderId = paymentIntent.metadata?.orderId;
         break;
       }
 
@@ -54,6 +83,7 @@ export async function POST(req: Request) {
         // - Notify user
         // - Update order status
         console.log("Payment failed:", paymentIntent.id);
+        orderId = paymentIntent.metadata?.orderId;
         break;
       }
 
@@ -86,6 +116,22 @@ export async function POST(req: Request) {
 
       default:
         console.log(`Unhandled event type: ${event.type}`);
+    }
+
+    // BS-902: Log webhook event with PII redaction
+    await logWebhookEvent({
+      provider: 'stripe',
+      eventType: event.type,
+      orderId,
+      payload: event as unknown as Record<string, any>,
+      status: processingError ? 'failure' : 'success',
+      errorMessage: processingError?.message,
+      ipAddress,
+      userAgent,
+    });
+
+    if (processingError) {
+      throw processingError;
     }
 
     return NextResponse.json({ received: true });
