@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 114,
-  "completedFeatures": 66,
+  "completedFeatures": 68,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -2078,7 +2078,16 @@
       "description": "Verify Svix signature, store email events, map tags to person_id",
       "category": "growth-data-plane",
       "priority": "P0",
-      "passes": false
+      "phase": 7,
+      "effort": "8pts",
+      "files": [
+        "app/api/webhooks/resend/route.ts",
+        "lib/email/resend-client.ts",
+        "lib/email/README.md",
+        "e2e/resend-webhook.spec.ts"
+      ],
+      "dependencies": ["GDP-001", "GDP-002", "GDP-003"],
+      "passes": true
     },
     {
       "id": "GDP-005",
@@ -2086,7 +2095,14 @@
       "description": "Track delivered/opened/clicked/bounced events from Resend webhooks",
       "category": "growth-data-plane",
       "priority": "P0",
-      "passes": false
+      "phase": 7,
+      "effort": "5pts",
+      "files": [
+        "app/api/webhooks/resend/route.ts",
+        "e2e/resend-webhook.spec.ts"
+      ],
+      "dependencies": ["GDP-004"],
+      "passes": true
     },
     {
       "id": "GDP-006",
@@ -2145,5 +2161,5 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-26T21:45:00.000Z"
+  "lastUpdated": "2026-01-26T22:15:00.000Z"
 }
