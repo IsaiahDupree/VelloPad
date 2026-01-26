@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 114,
-  "completedFeatures": 63,
+  "completedFeatures": 66,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -2035,7 +2035,14 @@
       "description": "Create person, identity_link, event, email_message, email_event, subscription, deal, person_features, segment tables",
       "category": "growth-data-plane",
       "priority": "P0",
-      "passes": false
+      "phase": 7,
+      "effort": "8pts",
+      "files": [
+        "supabase/migrations/20260126000001_add_growth_data_plane.sql",
+        "e2e/growth-data-plane.spec.ts"
+      ],
+      "dependencies": ["DB-001"],
+      "passes": true
     },
     {
       "id": "GDP-002",
@@ -2043,7 +2050,13 @@
       "description": "Canonical person table with identity links for posthog, stripe, meta",
       "category": "growth-data-plane",
       "priority": "P0",
-      "passes": false
+      "phase": 7,
+      "effort": "5pts",
+      "files": [
+        "supabase/migrations/20260126000001_add_growth_data_plane.sql"
+      ],
+      "dependencies": ["GDP-001"],
+      "passes": true
     },
     {
       "id": "GDP-003",
@@ -2051,7 +2064,13 @@
       "description": "Normalized events from web/app/email/stripe/booking/meta sources",
       "category": "growth-data-plane",
       "priority": "P0",
-      "passes": false
+      "phase": 7,
+      "effort": "5pts",
+      "files": [
+        "supabase/migrations/20260126000001_add_growth_data_plane.sql"
+      ],
+      "dependencies": ["GDP-001"],
+      "passes": true
     },
     {
       "id": "GDP-004",
@@ -2126,5 +2145,5 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-21T22:06:25.049Z"
+  "lastUpdated": "2026-01-26T21:45:00.000Z"
 }
