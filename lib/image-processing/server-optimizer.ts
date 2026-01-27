@@ -43,7 +43,7 @@ export async function optimizeImageServer(
   }
 
   return {
-    blob: new Blob([buffer]),
+    blob: new Blob([new Uint8Array(buffer)]),
     metadata,
     originalSize,
     optimizedSize: originalSize,

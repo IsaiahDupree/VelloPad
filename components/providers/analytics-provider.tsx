@@ -7,7 +7,7 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { initializePostHog, getPostHog, trackPageView as phTrackPageView } from '@/lib/analytics';
 import type { PostHog } from 'posthog-js';
@@ -28,7 +28,7 @@ interface AnalyticsProviderProps {
   children: React.ReactNode;
 }
 
-export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+function AnalyticsProviderInner({ children }: AnalyticsProviderProps) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [posthog, setPosthog] = useState<PostHog | null>(null);
   const pathname = usePathname();
@@ -57,5 +57,13 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     <AnalyticsContext.Provider value={{ posthog, isInitialized }}>
       {children}
     </AnalyticsContext.Provider>
+  );
+}
+
+export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+  return (
+    <Suspense fallback={<div>{children}</div>}>
+      <AnalyticsProviderInner>{children}</AnalyticsProviderInner>
+    </Suspense>
   );
 }

@@ -18,6 +18,14 @@ export type EventCategory =
   | 'reliability';
 
 // ============================================================================
+// BASE TYPE FOR ALL EVENT PROPERTIES
+// ============================================================================
+
+export interface BaseEventProperties {
+  [key: string]: unknown;
+}
+
+// ============================================================================
 // ACQUISITION EVENTS (TRACK-002)
 // ============================================================================
 
@@ -27,7 +35,7 @@ export type AcquisitionEvent =
   | 'pricing_view'
   | 'template_preview';
 
-export interface LandingViewProperties {
+export interface LandingViewProperties extends BaseEventProperties {
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
@@ -37,14 +45,14 @@ export interface LandingViewProperties {
   landing_page: string;
 }
 
-export interface CTAClickProperties {
+export interface CTAClickProperties extends BaseEventProperties {
   cta_text: string;
   cta_location: string;
   cta_type: 'primary' | 'secondary' | 'tertiary';
   destination_url: string;
 }
 
-export interface TemplatePreviewProperties {
+export interface TemplatePreviewProperties extends BaseEventProperties {
   template_id: string;
   template_name: string;
   template_category: string;
@@ -61,25 +69,25 @@ export type ActivationEvent =
   | 'activation_complete'
   | 'first_book_created';
 
-export interface SignupStartProperties {
+export interface SignupStartProperties extends BaseEventProperties {
   signup_method: 'email' | 'google' | 'github';
   utm_source?: string;
   utm_campaign?: string;
 }
 
-export interface SignupCompleteProperties {
+export interface SignupCompleteProperties extends BaseEventProperties {
   user_id: string;
   signup_method: 'email' | 'google' | 'github';
   time_to_complete_seconds: number;
 }
 
-export interface LoginSuccessProperties {
+export interface LoginSuccessProperties extends BaseEventProperties {
   user_id: string;
   login_method: 'email' | 'google' | 'github';
   is_returning_user: boolean;
 }
 
-export interface ActivationCompleteProperties {
+export interface ActivationCompleteProperties extends BaseEventProperties {
   user_id: string;
   time_to_activation_minutes: number;
   completed_actions: string[];
@@ -97,7 +105,7 @@ export type CoreValueEvent =
   | 'cover_designed'
   | 'order_placed';
 
-export interface BookCreatedProperties {
+export interface BookCreatedProperties extends BaseEventProperties {
   book_id: string;
   title: string;
   template_id?: string;
@@ -106,21 +114,21 @@ export interface BookCreatedProperties {
   genre?: string;
 }
 
-export interface ChapterWrittenProperties {
+export interface ChapterWrittenProperties extends BaseEventProperties {
   book_id: string;
   chapter_id: string;
   word_count: number;
   time_spent_seconds: number;
 }
 
-export interface WordCountMilestoneProperties {
+export interface WordCountMilestoneProperties extends BaseEventProperties {
   book_id: string;
   milestone: 100 | 300 | 1000 | 5000 | 10000 | 25000 | 50000;
   current_word_count: number;
   days_writing: number;
 }
 
-export interface PDFGeneratedProperties {
+export interface PDFGeneratedProperties extends BaseEventProperties {
   book_id: string;
   rendition_id: string;
   page_count: number;
@@ -128,7 +136,7 @@ export interface PDFGeneratedProperties {
   generation_time_seconds: number;
 }
 
-export interface CoverDesignedProperties {
+export interface CoverDesignedProperties extends BaseEventProperties {
   book_id: string;
   cover_template?: string;
   is_custom: boolean;
@@ -144,7 +152,7 @@ export type MonetizationEvent =
   | 'print_order_completed'
   | 'subscription_started';
 
-export interface CheckoutStartedProperties {
+export interface CheckoutStartedProperties extends BaseEventProperties {
   book_id: string;
   order_id: string;
   quantity: number;
@@ -153,7 +161,7 @@ export interface CheckoutStartedProperties {
   currency: string;
 }
 
-export interface PurchaseCompletedProperties {
+export interface PurchaseCompletedProperties extends BaseEventProperties {
   order_id: string;
   book_id: string;
   quantity: number;
@@ -163,7 +171,7 @@ export interface PurchaseCompletedProperties {
   payment_method: string;
 }
 
-export interface PrintOrderCompletedProperties {
+export interface PrintOrderCompletedProperties extends BaseEventProperties {
   order_id: string;
   book_id: string;
   provider: string;
@@ -172,7 +180,7 @@ export interface PrintOrderCompletedProperties {
   currency: string;
 }
 
-export interface SubscriptionStartedProperties {
+export interface SubscriptionStartedProperties extends BaseEventProperties {
   plan: 'pro' | 'premium';
   interval: 'monthly' | 'yearly';
   amount: number;
@@ -188,12 +196,12 @@ export type RetentionEvent =
   | 'writing_streak'
   | 'books_completed';
 
-export interface ReturnSessionProperties {
+export interface ReturnSessionProperties extends BaseEventProperties {
   days_since_last_session: number;
   total_sessions: number;
 }
 
-export interface WritingStreakProperties {
+export interface WritingStreakProperties extends BaseEventProperties {
   streak_days: number;
   total_words_in_streak: number;
 }
@@ -208,7 +216,7 @@ export type ReliabilityEvent =
   | 'print_order_failed'
   | 'api_error';
 
-export interface ErrorProperties {
+export interface ErrorProperties extends BaseEventProperties {
   error_type: string;
   error_message: string;
   error_code?: string;
@@ -216,37 +224,6 @@ export interface ErrorProperties {
   user_action: string;
 }
 
-// ============================================================================
-// UNIFIED EVENT PROPERTIES
-// ============================================================================
-
-export interface BaseEventProperties {
-  // User context
-  user_id?: string;
-  workspace_id?: string;
-  session_id?: string;
-
-  // Page context
-  page_url?: string;
-  page_path?: string;
-  referrer?: string;
-
-  // UTM parameters
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_content?: string;
-  utm_term?: string;
-
-  // Device/browser
-  user_agent?: string;
-  browser?: string;
-  device_type?: 'mobile' | 'tablet' | 'desktop';
-  os?: string;
-
-  // Custom properties
-  [key: string]: unknown;
-}
 
 // ============================================================================
 // NORTH STAR METRICS

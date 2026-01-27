@@ -2,6 +2,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { LoginForm } from '@/components/auth/login-form';
 
+// Force dynamic rendering (uses Supabase client components)
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Login | VelloPad',
   description: 'Sign in to your VelloPad account',

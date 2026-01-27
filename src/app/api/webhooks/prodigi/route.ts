@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import type { ProdigiOrder } from '@/lib/providers/prodigi/types'
+import type { ProdigiOrder } from '@/src/lib/providers/prodigi/types'
 
 /**
  * Prodigi webhook event types

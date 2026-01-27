@@ -1,12 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PhotoUploader } from '@/components/photo-book/PhotoUploader'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
-export default function PhotoBookUploadPage() {
+function PhotoBookUploadPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const projectId = searchParams?.get('projectId')
@@ -192,5 +195,20 @@ export default function PhotoBookUploadPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function PhotoBookUploadPage() {
+  return (
+    <Suspense fallback={
+      <div className="container max-w-4xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PhotoBookUploadPageInner />
+    </Suspense>
   )
 }

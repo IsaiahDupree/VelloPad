@@ -314,6 +314,8 @@ function drawSpine(
   width: number,
   height: number
 ): void {
+  if (!design) return
+
   const xPt = inchesToPoints(x)
   const yPt = inchesToPoints(y)
   const widthPt = inchesToPoints(width)

@@ -356,11 +356,6 @@ function isValidURL(url: string): boolean {
  * Returns domain to use in from_email
  */
 export function getSendingDomain(tenant: Tenant | null): string {
-  // If tenant has custom sending domain configured
-  if (tenant?.email_branding?.sending_domain) {
-    return tenant.email_branding.sending_domain
-  }
-
   // If tenant has custom domains, use first one with mail subdomain
   if (tenant?.domains && tenant.domains.length > 0) {
     const primaryDomain = tenant.domains[0]

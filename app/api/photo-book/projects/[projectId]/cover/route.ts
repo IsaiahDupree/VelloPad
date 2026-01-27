@@ -35,10 +35,11 @@ export interface CoverDesignRow {
  */
 export async function GET(
   request: Request,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const supabase = createClient()
+    const { projectId } = await params
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -49,7 +50,7 @@ export async function GET(
     const { data: project } = await supabase
       .from('photo_book_projects')
       .select('user_id')
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single()
 
     if (!project || project.user_id !== user.id) {
@@ -60,7 +61,7 @@ export async function GET(
     const { data: cover, error } = await supabase
       .from('photo_book_covers')
       .select('*')
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
       .single()
 
     if (error && error.code !== 'PGRST116') {
@@ -83,10 +84,11 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const supabase = createClient()
+    const { projectId } = await params
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -97,7 +99,7 @@ export async function PUT(
     const { data: project } = await supabase
       .from('photo_book_projects')
       .select('user_id')
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single()
 
     if (!project || project.user_id !== user.id) {
@@ -117,7 +119,7 @@ export async function PUT(
 
     // Prepare data for database
     const coverData = {
-      project_id: params.projectId,
+      project_id: projectId,
       title: body.title,
       subtitle: body.subtitle || null,
       author: body.author || null,
@@ -162,10 +164,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const supabase = createClient()
+    const { projectId } = await params
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -176,7 +179,7 @@ export async function DELETE(
     const { data: project } = await supabase
       .from('photo_book_projects')
       .select('user_id')
-      .eq('id', params.projectId)
+      .eq('id', projectId)
       .single()
 
     if (!project || project.user_id !== user.id) {
@@ -186,7 +189,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('photo_book_covers')
       .delete()
-      .eq('project_id', params.projectId)
+      .eq('project_id', projectId)
 
     if (error) throw error
 

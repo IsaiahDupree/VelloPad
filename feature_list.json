@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 72,
+  "completedFeatures": 73,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -1920,7 +1920,14 @@
       "description": "Track landing_view, cta_click, pricing_view with UTM params",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/acquisition.ts",
+        "components/analytics/TrackedLink.tsx",
+        "components/analytics/TrackedButton.tsx",
+        "components/homepage/LandingPage.tsx",
+        "e2e/acquisition-tracking.spec.ts"
+      ]
     },
     {
       "id": "TRACK-003",
@@ -2178,11 +2185,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-26T23:30:00.000Z",
+  "lastUpdated": "2026-01-27T19:30:00.000Z",
   "stats": {
     "total": 142,
-    "passing": 72,
-    "pending": 70,
-    "percentComplete": "50.7"
+    "passing": 73,
+    "pending": 69,
+    "percentComplete": "51.4"
   }
 }

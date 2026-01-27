@@ -13,12 +13,12 @@ import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const resendWebhookSecret = process.env.RESEND_WEBHOOK_SECRET!;
-
-// Initialize Supabase client with service role
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Lazy-load Supabase client to avoid build-time initialization
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // Resend event types
 type ResendEventType =
@@ -103,6 +103,8 @@ async function getOrCreateEmailMessage(
     return null;
   }
 
+  const supabase = getSupabaseClient();
+
   // Try to find existing email_message by provider_message_id
   const { data: existingMessage } = await supabase
     .from('email_message')
@@ -149,6 +151,7 @@ async function createEmailEvent(
   eventType: string,
   payload: ResendWebhookPayload
 ) {
+  const supabase = getSupabaseClient();
   const { data, error } = await supabase.from('email_event').insert({
     email_message_id: emailMessageId,
     person_id: personId,
@@ -175,6 +178,7 @@ async function updateEmailMessage(
   eventType: ResendEventType,
   payload: ResendWebhookPayload
 ) {
+  const supabase = getSupabaseClient();
   const updates: Record<string, any> = {};
 
   switch (eventType) {
@@ -258,6 +262,7 @@ async function createUnifiedEvent(
 
   const eventName = eventNameMap[eventType] || eventType;
 
+  const supabase = getSupabaseClient();
   const { error } = await supabase.from('unified_event').insert({
     person_id: personId,
     event_name: eventName,
@@ -298,6 +303,7 @@ export async function POST(req: NextRequest) {
     const body = await req.text();
 
     // Verify signature
+    const resendWebhookSecret = process.env.RESEND_WEBHOOK_SECRET!;
     const wh = new Webhook(resendWebhookSecret);
     let payload: ResendWebhookPayload;
 

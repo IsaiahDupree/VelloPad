@@ -18,20 +18,20 @@ export function UserIdentityTracker() {
 
   // Get current user and subscribe to auth changes
   useEffect(() => {
+    if (!supabase) return;
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then((result: any) => {
+      setUser(result.data.session?.user ?? null);
     });
 
     // Subscribe to auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const subscription = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+    return () => subscription.data.subscription.unsubscribe();
+  }, [supabase]);
 
   // Use the identify hook
   useIdentifyUser(user);

@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { getDefaultWorkspace } from '@/lib/auth/workspaces';
 import { CreateBookForm } from '@/components/books/create-book-form';
 
+// Force dynamic rendering (auth required)
+export const dynamic = 'force-dynamic';
+
 export default async function NewBookPage() {
   const supabase = await createClient();
 

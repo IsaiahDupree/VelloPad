@@ -74,8 +74,9 @@ export async function generatePDF(
       if (page.backgroundColor) {
         const rgb = hexToRGB(page.backgroundColor)
         doc
+          .fillColor([rgb.r, rgb.g, rgb.b])
           .rect(0, 0, pageWidth, pageHeight)
-          .fill(rgb.r, rgb.g, rgb.b)
+          .fill()
       }
 
       // Draw trim marks if requested

@@ -119,7 +119,7 @@ export function checkBindingMargin(config: SpiralBindingConfig): PreflightCheck 
   const errors: PreflightWarning[] = []
 
   const dimensions = parsePageSize(config.pageSize)
-  const bindingEdgeDimension = config.bindingEdge === 'top' || config.bindingEdge === 'bottom'
+  const bindingEdgeDimension = config.bindingEdge === 'top'
     ? dimensions.height
     : dimensions.width
 

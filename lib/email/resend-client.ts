@@ -101,7 +101,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
       subject,
       html,
       text,
-      reply_to: replyTo,
+      replyTo,
       tags: [
         { name: 'person_id', value: personId },
         { name: 'email_message_id', value: emailMessageId },
