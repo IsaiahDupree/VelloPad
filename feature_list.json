@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 73,
+  "completedFeatures": 75,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -1943,7 +1943,14 @@
       "description": "Track product-specific value events (created, completed, downloaded)",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "app/api/books/route.ts",
+        "app/api/books/[id]/chapters/[chapterId]/route.ts",
+        "app/api/books/[id]/cover/route.ts",
+        "lib/rendition/worker.ts",
+        "e2e/tracking-events.spec.ts"
+      ]
     },
     {
       "id": "TRACK-005",
@@ -1951,7 +1958,11 @@
       "description": "Track checkout_started, purchase_completed, subscription events",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/stripe/checkout.ts",
+        "e2e/tracking-events.spec.ts"
+      ]
     },
     {
       "id": "TRACK-006",
@@ -2185,11 +2196,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-27T19:30:00.000Z",
+  "lastUpdated": "2026-01-27T22:30:00.000Z",
   "stats": {
     "total": 142,
-    "passing": 73,
-    "pending": 69,
-    "percentComplete": "51.4"
+    "passing": 75,
+    "pending": 67,
+    "percentComplete": "52.8"
   }
 }

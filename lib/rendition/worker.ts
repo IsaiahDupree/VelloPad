@@ -15,6 +15,7 @@ import type { RenditionJobData, RenditionJobResult } from './queue'
 import { renderInteriorPDF } from './renderers/interior'
 import { renderCoverPDF } from './renderers/cover'
 import { runPreflightChecks } from './preflight'
+import { trackServerEvent } from '../analytics/posthog-server'
 
 // ============================================================================
 // REDIS CONNECTION
@@ -134,6 +135,21 @@ async function processRenditionJob(
           page_count: result.pageCount,
         })
         .eq('id', renditionId)
+
+      // Track PDF generation event (TRACK-004)
+      try {
+        const fileSizeMB = result.fileSizeBytes ? result.fileSizeBytes / (1024 * 1024) : 0
+        trackServerEvent(job.data.userId, 'pdf_generated', {
+          book_id: bookId,
+          rendition_id: renditionId,
+          page_count: result.pageCount,
+          file_size_mb: fileSizeMB,
+          is_north_star_metric: true,
+          milestone: 'aha_moment',
+        })
+      } catch (trackingError) {
+        console.error('Failed to track pdf_generated event:', trackingError)
+      }
     } else if (jobType === 'cover' && result.pdfUrl) {
       await supabase
         .from('renditions')

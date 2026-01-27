@@ -6,6 +6,7 @@
 
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
+import { trackServerSideEvent } from '@/lib/analytics/events'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -156,6 +157,21 @@ export async function createCheckoutSession(
     })
     .eq('id', order.id)
 
+  // Track checkout started event (TRACK-005)
+  try {
+    trackServerSideEvent(input.userId, 'checkout_started', {
+      book_id: quote.book_id,
+      order_id: order.id,
+      quantity: quote.quantity,
+      format: quote.print_spec.binding,
+      total_value: quote.total_price,
+      currency: quote.currency,
+      provider: quote.provider,
+    })
+  } catch (trackingError) {
+    console.error('Failed to track checkout_started event:', trackingError)
+  }
+
   return {
     sessionId: session.id,
     url: session.url!,
@@ -224,6 +240,42 @@ export async function handleCheckoutSuccess(sessionId: string): Promise<void> {
       payment_intent_id: paymentIntent.id,
     },
   })
+
+  // Track purchase completed event (TRACK-005)
+  try {
+    const { data: order } = await supabase
+      .from('orders')
+      .select('book_id, user_id, quantity, total_amount, currency, provider, print_spec')
+      .eq('id', orderId)
+      .single()
+
+    if (order) {
+      // Track general purchase completed
+      trackServerSideEvent(order.user_id, 'purchase_completed', {
+        order_id: orderId,
+        book_id: order.book_id,
+        quantity: order.quantity,
+        format: order.print_spec.binding,
+        total_value: order.total_amount,
+        currency: order.currency,
+        payment_method: 'stripe',
+      })
+
+      // Track print order completed (north star metric)
+      trackServerSideEvent(order.user_id, 'print_order_completed', {
+        order_id: orderId,
+        book_id: order.book_id,
+        provider: order.provider,
+        quantity: order.quantity,
+        total_value: order.total_amount,
+        currency: order.currency,
+        is_north_star_metric: true,
+        milestone: 'monetized',
+      })
+    }
+  } catch (trackingError) {
+    console.error('Failed to track purchase events:', trackingError)
+  }
 
   // TODO: Trigger print order submission to provider (handled by webhook or background job)
 }

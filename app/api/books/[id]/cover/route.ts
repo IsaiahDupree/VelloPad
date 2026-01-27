@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCoverDesign, updateCoverDesign, type CoverDesign } from '@/lib/cover'
+import { createClient } from '@/lib/supabase/server'
+import { trackServerSideEvent } from '@/lib/analytics/events'
 
 /**
  * GET /api/books/[id]/cover
@@ -41,6 +43,21 @@ export async function PATCH(
     const design = body as Partial<CoverDesign>
 
     await updateCoverDesign(id, design)
+
+    // Track cover design event (TRACK-004)
+    try {
+      const supabase = await createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        trackServerSideEvent(user.id, 'cover_designed', {
+          book_id: id,
+          is_custom: !!design.backgroundImageId || !!design.backgroundColor,
+        })
+      }
+    } catch (trackingError) {
+      console.error('Failed to track cover_designed event:', trackingError)
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

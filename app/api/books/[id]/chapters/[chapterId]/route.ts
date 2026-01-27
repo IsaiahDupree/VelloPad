@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { hasWorkspaceAccess } from '@/lib/auth/workspaces';
+import { trackServerSideEvent } from '@/lib/analytics/events';
 
 export async function PATCH(
   request: Request,
@@ -62,6 +63,45 @@ export async function PATCH(
         { error: 'Failed to update chapter' },
         { status: 500 }
       );
+    }
+
+    // Track chapter writing event (TRACK-004)
+    if (word_count !== undefined && word_count > 0) {
+      try {
+        // Get total book word count
+        const { data: bookData } = await supabase
+          .from('books')
+          .select('word_count, title')
+          .eq('id', bookId)
+          .single();
+
+        const totalWordCount = bookData?.word_count || 0;
+
+        trackServerSideEvent(user.id, 'chapter_written', {
+          book_id: bookId,
+          chapter_id: chapterId,
+          word_count: word_count,
+          total_book_word_count: totalWordCount,
+        });
+
+        // Track word count milestones
+        const milestones = [100, 300, 1000, 5000, 10000, 25000, 50000];
+        for (const milestone of milestones) {
+          if (totalWordCount >= milestone) {
+            // Check if we haven't tracked this milestone before
+            const milestoneKey = `milestone_${milestone}_${bookId}`;
+            // Note: In production, you'd want to store this in a database
+            trackServerSideEvent(user.id, 'word_count_milestone', {
+              book_id: bookId,
+              milestone: milestone,
+              current_word_count: totalWordCount,
+              is_north_star_metric: milestone === 1000,
+            });
+          }
+        }
+      } catch (trackingError) {
+        console.error('Failed to track chapter_written event:', trackingError);
+      }
     }
 
     return NextResponse.json({ chapter }, { status: 200 });

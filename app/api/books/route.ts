@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { hasWorkspaceAccess } from '@/lib/auth/workspaces';
+import { trackServerSideEvent, trackBookCreated } from '@/lib/analytics/events';
 
 export async function POST(request: Request) {
   try {
@@ -61,6 +62,21 @@ export async function POST(request: Request) {
         { error: 'Failed to create book' },
         { status: 500 }
       );
+    }
+
+    // Track book creation event (TRACK-004)
+    try {
+      trackServerSideEvent(user.id, 'book_created', {
+        book_id: book.id,
+        title: book.title,
+        genre: book.genre,
+        trim_size: book.trim_size,
+        binding: book.binding,
+        workspace_id: workspaceId,
+      });
+    } catch (trackingError) {
+      // Don't fail the request if tracking fails
+      console.error('Failed to track book_created event:', trackingError);
     }
 
     return NextResponse.json({ book }, { status: 201 });
