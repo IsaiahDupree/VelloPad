@@ -2,8 +2,8 @@
   "project": "VelloPad",
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
-  "totalFeatures": 114,
-  "completedFeatures": 69,
+  "totalFeatures": 142,
+  "completedFeatures": 72,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -272,7 +272,7 @@
     {
       "id": "BS-501",
       "name": "Quote Flow",
-      "description": "Qty + address \u2192 price + shipping options",
+      "description": "Qty + address → price + shipping options",
       "priority": "P0",
       "phase": 5,
       "effort": "8pts",
@@ -381,7 +381,7 @@
     {
       "id": "BS-603",
       "name": "Webhook Ingestion",
-      "description": "Provider \u2192 order status updates",
+      "description": "Provider → order status updates",
       "priority": "P0",
       "phase": 6,
       "effort": "8pts",
@@ -449,7 +449,7 @@
     {
       "id": "BS-703",
       "name": "Admin Broadcast Tool",
-      "description": "Segment \u2192 send campaign",
+      "description": "Segment → send campaign",
       "priority": "P1",
       "phase": 7,
       "effort": "8pts",
@@ -1912,7 +1912,7 @@
       "description": "Install and initialize user event tracking SDK from ACD",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true
     },
     {
       "id": "TRACK-002",
@@ -1928,7 +1928,7 @@
       "description": "Track signup_start, login_success, activation_complete",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true
     },
     {
       "id": "TRACK-004",
@@ -1968,7 +1968,7 @@
       "description": "Identify users on login with traits (email, plan, etc.)",
       "category": "tracking",
       "priority": "P1",
-      "passes": false
+      "passes": true
     },
     {
       "id": "META-001",
@@ -2046,7 +2046,9 @@
         "supabase/migrations/20260126000001_add_growth_data_plane.sql",
         "e2e/growth-data-plane.spec.ts"
       ],
-      "dependencies": ["DB-001"],
+      "dependencies": [
+        "DB-001"
+      ],
       "passes": true
     },
     {
@@ -2060,7 +2062,9 @@
       "files": [
         "supabase/migrations/20260126000001_add_growth_data_plane.sql"
       ],
-      "dependencies": ["GDP-001"],
+      "dependencies": [
+        "GDP-001"
+      ],
       "passes": true
     },
     {
@@ -2074,7 +2078,9 @@
       "files": [
         "supabase/migrations/20260126000001_add_growth_data_plane.sql"
       ],
-      "dependencies": ["GDP-001"],
+      "dependencies": [
+        "GDP-001"
+      ],
       "passes": true
     },
     {
@@ -2091,7 +2097,11 @@
         "lib/email/README.md",
         "e2e/resend-webhook.spec.ts"
       ],
-      "dependencies": ["GDP-001", "GDP-002", "GDP-003"],
+      "dependencies": [
+        "GDP-001",
+        "GDP-002",
+        "GDP-003"
+      ],
       "passes": true
     },
     {
@@ -2106,13 +2116,15 @@
         "app/api/webhooks/resend/route.ts",
         "e2e/resend-webhook.spec.ts"
       ],
-      "dependencies": ["GDP-004"],
+      "dependencies": [
+        "GDP-004"
+      ],
       "passes": true
     },
     {
       "id": "GDP-006",
       "name": "Click Redirect Tracker",
-      "description": "Attribution spine: email \u2192 click \u2192 session \u2192 conversion with first-party cookie",
+      "description": "Attribution spine: email → click → session → conversion with first-party cookie",
       "category": "growth-data-plane",
       "priority": "P1",
       "passes": false
@@ -2166,5 +2178,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-26T23:30:00.000Z"
+  "lastUpdated": "2026-01-26T23:30:00.000Z",
+  "stats": {
+    "total": 142,
+    "passing": 72,
+    "pending": 70,
+    "percentComplete": "50.7"
+  }
 }

@@ -158,8 +158,8 @@ export async function trackEvent(options: TrackEventOptions): Promise<{ success:
       return { success: false, error: error.message };
     }
 
-    // Optionally forward to external analytics platforms
-    // await forwardToPostHog(options);
+    // Forward to external analytics platforms
+    await forwardToPostHog(options);
     // await forwardToMixpanel(options);
 
     return { success: true, eventId: data.id };
@@ -384,13 +384,18 @@ async function forwardToPostHog(options: TrackEventOptions) {
   }
 
   try {
-    // PostHog forwarding logic
-    // const posthog = require('posthog-node');
-    // client.capture({
-    //   distinctId: options.userId,
-    //   event: options.eventName,
-    //   properties: options.properties,
-    // });
+    // Use dynamic import to avoid issues in server components
+    const { trackServerEvent } = await import('@/lib/analytics/posthog-server');
+
+    if (options.userId) {
+      trackServerEvent(options.userId, options.eventName, {
+        ...options.properties,
+        workspace_id: options.workspaceId,
+        book_id: options.bookId,
+        order_id: options.orderId,
+        event_category: options.eventCategory,
+      });
+    }
   } catch (error) {
     console.error('Error forwarding to PostHog:', error);
   }
