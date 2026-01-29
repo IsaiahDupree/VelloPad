@@ -2228,7 +2228,20 @@
       "description": "Fire Pixel eventID matching CAPI event_id for deduplication",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "phase": 7,
+      "effort": "5pts",
+      "files": [
+        "lib/analytics/event-dedup.ts",
+        "lib/analytics/meta-integration.ts",
+        "lib/analytics/DEDUPLICATION.md",
+        "e2e/meta-deduplication.spec.ts"
+      ],
+      "dependencies": [
+        "META-001",
+        "META-004",
+        "META-005"
+      ],
+      "passes": true
     },
     {
       "id": "GDP-011",
@@ -2250,8 +2263,8 @@
   "lastUpdated": "2026-01-29T20:40:50Z",
   "stats": {
     "total": 142,
-    "passing": 85,
-    "pending": 57,
-    "percentComplete": "59.8"
+    "passing": 86,
+    "pending": 56,
+    "percentComplete": "60.5"
   }
 }

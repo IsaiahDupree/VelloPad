@@ -13,7 +13,6 @@ import {
   trackMetaPurchase,
   trackMetaSubscribe,
   trackMetaViewContent,
-  generateEventID,
 } from './meta-pixel';
 
 import {
@@ -25,6 +24,11 @@ import {
   extractFBC,
   extractFBP,
 } from './meta-capi';
+
+import {
+  createDedupEvent,
+  getOrGenerateEventID,
+} from './event-dedup';
 
 import type {
   SignupStartProperties,
@@ -39,12 +43,15 @@ import type {
  * Browser: Meta Pixel
  */
 export function trackMetaSignupStart(properties: SignupStartProperties) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('Lead');
 
   trackMetaLead({
     contentName: 'Signup Form',
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  // Store for potential server-side call
+  dedup.storeForServer();
 }
 
 /**
@@ -53,19 +60,25 @@ export function trackMetaSignupStart(properties: SignupStartProperties) {
  * Server: CAPI
  */
 export function trackMetaSignupComplete(properties: SignupCompleteProperties) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('CompleteRegistration');
 
   // Browser pixel
   trackMetaCompleteRegistration({
     contentName: 'VelloPad Account',
     status: true,
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  // Store for server-side deduplication
+  dedup.storeForServer();
+
+  return dedup.eventID;
 }
 
 /**
  * Track signup complete from server
  * Server: CAPI only
+ * Uses same eventID as browser pixel if available for deduplication
  */
 export async function trackMetaSignupCompleteServer(params: {
   userId: string;
@@ -74,8 +87,10 @@ export async function trackMetaSignupCompleteServer(params: {
   firstName?: string;
   lastName?: string;
   request?: Request;
+  eventID?: string; // Optional: pass from client for guaranteed dedup
 }) {
-  const eventID = generateEventID();
+  // Use provided eventID or retrieve from request, or generate new
+  const eventID = params.eventID || getOrGenerateEventID(params.request, 'CompleteRegistration');
 
   // Extract Meta tracking params from request
   const clientIp = params.request?.headers.get('x-forwarded-for')?.split(',')[0];
@@ -107,14 +122,16 @@ export async function trackMetaSignupCompleteServer(params: {
  * Browser: Meta Pixel
  */
 export function trackMetaBookCreated(bookId: string, title: string) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('ViewContent');
 
   trackMetaViewContent({
     contentName: title,
     contentCategory: 'book',
     contentIds: [bookId],
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  dedup.storeForServer();
 }
 
 /**
@@ -123,7 +140,7 @@ export function trackMetaBookCreated(bookId: string, title: string) {
  * Server: CAPI
  */
 export function trackMetaCheckoutStarted(properties: CheckoutStartedProperties) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('InitiateCheckout');
 
   // Browser pixel
   trackMetaInitiateCheckout({
@@ -131,13 +148,19 @@ export function trackMetaCheckoutStarted(properties: CheckoutStartedProperties) 
     numItems: properties.quantity,
     value: properties.total_value,
     currency: properties.currency,
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  // Store for server-side deduplication
+  dedup.storeForServer();
+
+  return dedup.eventID;
 }
 
 /**
  * Track checkout started from server
  * Server: CAPI only
+ * Uses same eventID as browser pixel if available for deduplication
  */
 export async function trackMetaCheckoutStartedServer(params: {
   userId: string;
@@ -148,8 +171,9 @@ export async function trackMetaCheckoutStartedServer(params: {
   value: number;
   currency?: string;
   request?: Request;
+  eventID?: string; // Optional: pass from client for guaranteed dedup
 }) {
-  const eventID = generateEventID();
+  const eventID = params.eventID || getOrGenerateEventID(params.request, 'InitiateCheckout');
 
   const clientIp = params.request?.headers.get('x-forwarded-for')?.split(',')[0];
   const userAgent = params.request?.headers.get('user-agent') || undefined;
@@ -182,7 +206,7 @@ export async function trackMetaCheckoutStartedServer(params: {
  * Server: CAPI
  */
 export function trackMetaPurchaseComplete(properties: PurchaseCompletedProperties) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('Purchase');
 
   // Browser pixel
   trackMetaPurchase({
@@ -191,13 +215,19 @@ export function trackMetaPurchaseComplete(properties: PurchaseCompletedPropertie
     numItems: properties.quantity,
     value: properties.total_value,
     currency: properties.currency,
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  // Store for server-side deduplication
+  dedup.storeForServer();
+
+  return dedup.eventID;
 }
 
 /**
  * Track purchase completed from server
  * Server: CAPI only (most reliable for purchase tracking)
+ * Uses same eventID as browser pixel if available for deduplication
  */
 export async function trackMetaPurchaseCompleteServer(params: {
   userId: string;
@@ -214,8 +244,9 @@ export async function trackMetaPurchaseCompleteServer(params: {
   value: number;
   currency?: string;
   request?: Request;
+  eventID?: string; // Optional: pass from client for guaranteed dedup
 }) {
-  const eventID = generateEventID();
+  const eventID = params.eventID || getOrGenerateEventID(params.request, 'Purchase');
 
   const clientIp = params.request?.headers.get('x-forwarded-for')?.split(',')[0];
   const userAgent = params.request?.headers.get('user-agent') || undefined;
@@ -255,7 +286,7 @@ export async function trackMetaPurchaseCompleteServer(params: {
  * Server: CAPI
  */
 export function trackMetaSubscriptionStarted(properties: SubscriptionStartedProperties) {
-  const eventID = generateEventID();
+  const dedup = createDedupEvent('Subscribe');
 
   // Calculate predicted LTV (12 months for yearly, 6 months for monthly)
   const predictedLtv = properties.interval === 'yearly'
@@ -267,13 +298,19 @@ export function trackMetaSubscriptionStarted(properties: SubscriptionStartedProp
     value: properties.amount,
     currency: properties.currency,
     predictedLtv,
-    eventID,
+    eventID: dedup.eventID,
   });
+
+  // Store for server-side deduplication
+  dedup.storeForServer();
+
+  return dedup.eventID;
 }
 
 /**
  * Track subscription started from server
  * Server: CAPI only
+ * Uses same eventID as browser pixel if available for deduplication
  */
 export async function trackMetaSubscriptionStartedServer(params: {
   userId: string;
@@ -283,8 +320,9 @@ export async function trackMetaSubscriptionStartedServer(params: {
   currency?: string;
   interval: 'monthly' | 'yearly';
   request?: Request;
+  eventID?: string; // Optional: pass from client for guaranteed dedup
 }) {
-  const eventID = generateEventID();
+  const eventID = params.eventID || getOrGenerateEventID(params.request, 'Subscribe');
 
   const clientIp = params.request?.headers.get('x-forwarded-for')?.split(',')[0];
   const userAgent = params.request?.headers.get('user-agent') || undefined;
