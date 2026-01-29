@@ -12,6 +12,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
 import { getEmailBranding, wrapEmailWithBranding, applyBrandingToEmail } from '@/lib/email/tenant-branding';
+import { rewriteEmailLinksWithTracking } from '@/lib/tracking/click-redirect';
+import { syncEmailToGDP, getOrCreatePersonByEmail } from '@/lib/email/email-message-sync';
 
 // ============================================================================
 // TYPES
@@ -142,6 +144,31 @@ export class LifecycleEmailService {
         };
       }
 
+      // 4a. Sync to Growth Data Plane and get email_message_id
+      const personId = await getOrCreatePersonByEmail(params.toEmail);
+      const emailMessageId = await syncEmailToGDP({
+        emailSendId: emailSend.id,
+        personId: personId || undefined,
+        toEmail: params.toEmail,
+        fromEmail: brandedEmail.from_email,
+        subject: brandedEmail.subject,
+        emailType: template.template_category || 'lifecycle',
+        templateKey: params.templateKey,
+        provider: 'resend',
+        status: 'pending',
+        metadata: params.metadata,
+      });
+
+      // 4b. Apply click tracking to email HTML (if emailMessageId available)
+      let trackedHtml = brandedEmail.html;
+      if (emailMessageId) {
+        trackedHtml = rewriteEmailLinksWithTracking(
+          brandedEmail.html,
+          emailMessageId,
+          personId || undefined
+        );
+      }
+
       // 5. Send via Resend (if configured)
       if (this.resend) {
         try {
@@ -149,7 +176,7 @@ export class LifecycleEmailService {
             from: `${brandedEmail.from_name} <${brandedEmail.from_email}>`,
             to: params.toEmail,
             subject: brandedEmail.subject,
-            html: brandedEmail.html,
+            html: trackedHtml, // Use tracked HTML with click tracking
             text: brandedEmail.text,
             ...(brandedEmail.reply_to && { reply_to: brandedEmail.reply_to }),
           });

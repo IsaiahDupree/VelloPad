@@ -53,10 +53,10 @@ export interface MetaEventParameters {
  */
 export function initMetaPixel(pixelId: string): void {
   if (typeof window === 'undefined') return;
-  if (window.fbq) return; // Already initialized
+  if (typeof window.fbq !== 'undefined') return; // Already initialized
 
   // Pixel stub before script loads
-  const fbq = function (...args: any[]) {
+  const fbq: any = function (...args: any[]) {
     if (fbq.callMethod) {
       fbq.callMethod.apply(fbq, args);
     } else {

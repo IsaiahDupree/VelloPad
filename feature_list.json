@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 81,
+  "completedFeatures": 83,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -2168,7 +2168,16 @@
       "description": "Attribution spine: email → click → session → conversion with first-party cookie",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/tracking/click-redirect.ts",
+        "lib/tracking/README.md",
+        "lib/email/email-message-sync.ts",
+        "app/api/track/click/route.ts",
+        "supabase/migrations/20260129000001_add_click_tracking_functions.sql",
+        "e2e/click-tracking.spec.ts",
+        "lib/email/lifecycle/index.ts"
+      ]
     },
     {
       "id": "GDP-007",
@@ -2192,7 +2201,15 @@
       "description": "Call posthog.identify(personId) on login/signup",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/identity/posthog-identity.ts",
+        "lib/identity/use-identity-sync.ts",
+        "lib/identity/README.md",
+        "app/auth/callback/route.ts",
+        "components/app-shell.tsx",
+        "e2e/posthog-identity.spec.ts"
+      ]
     },
     {
       "id": "GDP-010",
@@ -2219,11 +2236,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-29T18:30:00.000Z",
+  "lastUpdated": "2026-01-29T19:00:00.000Z",
   "stats": {
     "total": 142,
-    "passing": 81,
-    "pending": 61,
-    "percentComplete": "57.0"
+    "passing": 83,
+    "pending": 59,
+    "percentComplete": "58.5"
   }
 }
