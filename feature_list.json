@@ -453,10 +453,15 @@
       "priority": "P1",
       "phase": 7,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "admin",
       "files": [
-        "src/app/admin/campaigns/"
+        "app/(app)/admin/campaigns/",
+        "app/api/campaigns/",
+        "components/campaigns/",
+        "lib/campaigns/broadcast-service.ts",
+        "supabase/migrations/20260129000002_add_broadcast_campaigns.sql",
+        "e2e/admin-campaigns.spec.ts"
       ],
       "dependencies": [
         "BS-701"
@@ -2284,11 +2289,11 @@
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T21:30:00Z",
+  "lastUpdated": "2026-01-29T21:45:00Z",
   "stats": {
     "total": 142,
-    "passing": 88,
-    "pending": 54,
-    "percentComplete": "62.0"
+    "passing": 89,
+    "pending": 53,
+    "percentComplete": "62.7"
   }
 }
