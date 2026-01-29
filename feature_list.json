@@ -2249,7 +2249,20 @@
       "description": "Compute active_days, core_actions, pricing_views, email_opens from events",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "phase": 7,
+      "effort": "8pts",
+      "files": [
+        "lib/features/person-features.ts",
+        "lib/features/README.md",
+        "app/api/features/compute/route.ts",
+        "app/api/cron/compute-features/route.ts",
+        "e2e/person-features.spec.ts"
+      ],
+      "dependencies": [
+        "GDP-001",
+        "GDP-003"
+      ],
+      "passes": true
     },
     {
       "id": "GDP-012",
@@ -2263,8 +2276,8 @@
   "lastUpdated": "2026-01-29T20:40:50Z",
   "stats": {
     "total": 142,
-    "passing": 86,
-    "pending": 56,
-    "percentComplete": "60.5"
+    "passing": 87,
+    "pending": 55,
+    "percentComplete": "61.2"
   }
 }
