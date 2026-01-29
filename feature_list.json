@@ -2270,14 +2270,25 @@
       "description": "Evaluate segment membership and trigger automations (Resend, Meta, outbound)",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/segments/segment-engine.ts",
+        "lib/segments/README.md",
+        "app/api/segments/route.ts",
+        "app/api/segments/[segmentId]/route.ts",
+        "app/api/segments/[segmentId]/evaluate/route.ts",
+        "app/api/segments/[segmentId]/compute-membership/route.ts",
+        "app/api/segments/[segmentId]/members/route.ts",
+        "app/api/cron/compute-segments/route.ts",
+        "e2e/segment-engine.spec.ts"
+      ]
     }
   ],
-  "lastUpdated": "2026-01-29T20:40:50Z",
+  "lastUpdated": "2026-01-29T21:30:00Z",
   "stats": {
     "total": 142,
-    "passing": 87,
-    "pending": 55,
-    "percentComplete": "61.2"
+    "passing": 88,
+    "pending": 54,
+    "percentComplete": "62.0"
   }
 }
