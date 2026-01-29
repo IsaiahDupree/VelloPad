@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 83,
+  "completedFeatures": 85,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -2185,7 +2185,13 @@
       "description": "Handle subscription events, map stripe_customer_id to person_id",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "app/api/webhooks/stripe/route.ts",
+        "lib/stripe/subscription-sync.ts",
+        "lib/stripe/subscription-sync.README.md",
+        "e2e/stripe-subscription-sync.spec.ts"
+      ]
     },
     {
       "id": "GDP-008",
@@ -2193,7 +2199,12 @@
       "description": "Upsert subscription status, plan, MRR from Stripe events",
       "category": "growth-data-plane",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/stripe/subscription-sync.ts",
+        "supabase/migrations/20260126000001_add_growth_data_plane.sql",
+        "e2e/stripe-subscription-sync.spec.ts"
+      ]
     },
     {
       "id": "GDP-009",
@@ -2236,11 +2247,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-29T19:00:00.000Z",
+  "lastUpdated": "2026-01-29T20:40:50Z",
   "stats": {
     "total": 142,
-    "passing": 83,
-    "pending": 59,
-    "percentComplete": "58.5"
+    "passing": 85,
+    "pending": 57,
+    "percentComplete": "59.8"
   }
 }

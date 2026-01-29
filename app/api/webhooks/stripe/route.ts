@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { handleCheckoutSuccess, handleCheckoutFailure } from "@/lib/stripe/checkout";
 import { logWebhookEvent } from "@/lib/audit";
+import {
+  syncSubscription,
+  handleSubscriptionDeleted,
+  handleInvoicePaid,
+  handleInvoicePaymentFailed,
+} from "@/lib/stripe/subscription-sync";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
@@ -88,29 +94,51 @@ export async function POST(req: Request) {
       }
 
       case "customer.subscription.created":
-      case "customer.subscription.updated":
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        try {
+          // GDP-007, GDP-008: Sync subscription to Growth Data Plane
+          await syncSubscription(subscription);
+          console.log("✅ Subscription synced:", event.type, subscription.id);
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
+        break;
+      }
+
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        // Handle subscription changes
-        // - Update user plan in database
-        // - Send appropriate emails
-        console.log("Subscription event:", event.type, subscription.id);
+        try {
+          // GDP-007, GDP-008: Handle subscription cancellation
+          await handleSubscriptionDeleted(subscription);
+          console.log("✅ Subscription deleted:", subscription.id);
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
         break;
       }
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        // Handle paid invoice
-        console.log("Invoice paid:", invoice.id);
+        try {
+          // GDP-007, GDP-008: Track revenue and update person features
+          await handleInvoicePaid(invoice);
+          console.log("✅ Invoice paid:", invoice.id);
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
         break;
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        // Handle failed invoice payment
-        // - Notify user
-        // - Potentially downgrade plan
-        console.log("Invoice payment failed:", invoice.id);
+        try {
+          // GDP-007: Log payment failure event
+          await handleInvoicePaymentFailed(invoice);
+          console.log("⚠️ Invoice payment failed:", invoice.id);
+        } catch (err) {
+          processingError = err instanceof Error ? err : new Error('Unknown error');
+        }
         break;
       }
 
