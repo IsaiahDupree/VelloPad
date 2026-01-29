@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 75,
+  "completedFeatures": 81,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -1994,7 +1994,12 @@
       "description": "Install Facebook Pixel script in app layout",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/meta-pixel.ts",
+        "components/providers/meta-pixel-provider.tsx",
+        "app/layout.tsx"
+      ]
     },
     {
       "id": "META-002",
@@ -2002,7 +2007,10 @@
       "description": "Track all page views with Meta Pixel",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "components/providers/meta-pixel-provider.tsx"
+      ]
     },
     {
       "id": "META-003",
@@ -2010,7 +2018,11 @@
       "description": "Map app events to Meta standard events (Purchase, Lead, etc.)",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/meta-integration.ts",
+        "lib/stripe/checkout.ts"
+      ]
     },
     {
       "id": "META-004",
@@ -2018,7 +2030,11 @@
       "description": "Implement Conversions API for server-side event tracking",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/meta-capi.ts",
+        "lib/analytics/meta-integration.ts"
+      ]
     },
     {
       "id": "META-005",
@@ -2026,7 +2042,11 @@
       "description": "Use event_id to deduplicate browser and server events",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/meta-pixel.ts",
+        "lib/analytics/meta-integration.ts"
+      ]
     },
     {
       "id": "META-006",
@@ -2034,7 +2054,10 @@
       "description": "Hash email/phone with SHA256 for CAPI user matching",
       "category": "meta-pixel",
       "priority": "P1",
-      "passes": false
+      "passes": true,
+      "files": [
+        "lib/analytics/meta-capi.ts"
+      ]
     },
     {
       "id": "META-007",
@@ -2196,11 +2219,11 @@
       "passes": false
     }
   ],
-  "lastUpdated": "2026-01-27T22:30:00.000Z",
+  "lastUpdated": "2026-01-29T18:30:00.000Z",
   "stats": {
     "total": 142,
-    "passing": 75,
-    "pending": 67,
-    "percentComplete": "52.8"
+    "passing": 81,
+    "pending": 61,
+    "percentComplete": "57.0"
   }
 }

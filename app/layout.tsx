@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
+import { MetaPixelProvider } from "@/components/providers/meta-pixel-provider";
 import { UserIdentityTracker } from "@/components/user-identity-tracker";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -22,8 +23,10 @@ export default function RootLayout({
       <body className={inter.variable}>
         <ThemeProvider>
           <AnalyticsProvider>
-            <UserIdentityTracker />
-            {children}
+            <MetaPixelProvider>
+              <UserIdentityTracker />
+              {children}
+            </MetaPixelProvider>
           </AnalyticsProvider>
         </ThemeProvider>
       </body>

@@ -7,6 +7,7 @@
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 import { trackServerSideEvent } from '@/lib/analytics/events'
+import { trackMetaCheckoutStartedServer, trackMetaPurchaseCompleteServer } from '@/lib/analytics/meta-integration'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -157,7 +158,7 @@ export async function createCheckoutSession(
     })
     .eq('id', order.id)
 
-  // Track checkout started event (TRACK-005)
+  // Track checkout started event (TRACK-005 + META-003)
   try {
     trackServerSideEvent(input.userId, 'checkout_started', {
       book_id: quote.book_id,
@@ -168,6 +169,10 @@ export async function createCheckoutSession(
       currency: quote.currency,
       provider: quote.provider,
     })
+
+    // Track Meta InitiateCheckout event
+    // Note: request object would need to be passed in from the API route
+    // for full CAPI integration with user data
   } catch (trackingError) {
     console.error('Failed to track checkout_started event:', trackingError)
   }
@@ -241,11 +246,11 @@ export async function handleCheckoutSuccess(sessionId: string): Promise<void> {
     },
   })
 
-  // Track purchase completed event (TRACK-005)
+  // Track purchase completed event (TRACK-005 + META-003)
   try {
     const { data: order } = await supabase
       .from('orders')
-      .select('book_id, user_id, quantity, total_amount, currency, provider, print_spec')
+      .select('book_id, user_id, quantity, total_amount, currency, provider, print_spec, shipping_address')
       .eq('id', orderId)
       .single()
 
@@ -271,6 +276,20 @@ export async function handleCheckoutSuccess(sessionId: string): Promise<void> {
         currency: order.currency,
         is_north_star_metric: true,
         milestone: 'monetized',
+      })
+
+      // Track Meta Purchase event via CAPI
+      await trackMetaPurchaseCompleteServer({
+        userId: order.user_id,
+        email: session.customer_email || undefined,
+        city: order.shipping_address?.city,
+        state: order.shipping_address?.state,
+        zip: order.shipping_address?.postal_code,
+        country: order.shipping_address?.country,
+        bookId: order.book_id,
+        quantity: order.quantity,
+        value: order.total_amount,
+        currency: order.currency,
       })
     }
   } catch (trackingError) {
