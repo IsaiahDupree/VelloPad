@@ -1155,7 +1155,7 @@
       "priority": "P1",
       "phase": 11,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "multi-tenant",
       "files": [
         "src/components/onboarding/preferences.tsx"
@@ -1468,7 +1468,7 @@
       "priority": "P1",
       "phase": 12,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
         "src/app/api/photo-book/download/"
@@ -1628,7 +1628,7 @@
       "priority": "P1",
       "phase": 13,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
         "src/app/photo-book/share/"
@@ -2292,8 +2292,8 @@
   "lastUpdated": "2026-01-29T21:45:00Z",
   "stats": {
     "total": 142,
-    "passing": 93,
+    "passing": 96,
     "pending": 53,
-    "percentComplete": "65.5"
+    "percentComplete": "67.6"
   }
 }
