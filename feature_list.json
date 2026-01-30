@@ -686,7 +686,7 @@
       "priority": "P2",
       "phase": 2,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "ai",
       "files": [
         "src/components/ai/coach/"
@@ -1069,7 +1069,7 @@
       "priority": "P1",
       "phase": 11,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "versioning",
       "files": [
         "src/lib/templates/versioning.ts"
@@ -1221,7 +1221,7 @@
       "priority": "P1",
       "phase": 12,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
         "src/lib/exif/"
@@ -2289,11 +2289,11 @@
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T21:45:00Z",
+  "lastUpdated": "2026-01-29T23:00:00Z",
   "stats": {
     "total": 142,
-    "passing": 96,
-    "pending": 53,
-    "percentComplete": "67.6"
+    "passing": 99,
+    "pending": 50,
+    "percentComplete": "69.7"
   }
 }
