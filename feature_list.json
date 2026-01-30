@@ -474,7 +474,7 @@
       "priority": "P1",
       "phase": 8,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "content",
       "files": [
         "src/lib/cms/"
@@ -2292,8 +2292,8 @@
   "lastUpdated": "2026-01-29T21:45:00Z",
   "stats": {
     "total": 142,
-    "passing": 92,
+    "passing": 93,
     "pending": 53,
-    "percentComplete": "64.8"
+    "percentComplete": "65.5"
   }
 }
