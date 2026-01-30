@@ -834,7 +834,7 @@
       "priority": "P1",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "database",
       "files": [
         "supabase/migrations/",
@@ -851,7 +851,7 @@
       "priority": "P1",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "templates",
       "files": [
         "src/lib/templates/tenant-overrides.ts"
@@ -936,7 +936,7 @@
       "priority": "P1",
       "phase": 10,
       "effort": "3pts",
-      "passes": false,
+      "passes": true,
       "category": "multi-tenant",
       "files": [
         "src/lib/auth/signup.ts"
@@ -2292,8 +2292,8 @@
   "lastUpdated": "2026-01-29T21:45:00Z",
   "stats": {
     "total": 142,
-    "passing": 89,
+    "passing": 92,
     "pending": 53,
-    "percentComplete": "62.7"
+    "percentComplete": "64.8"
   }
 }

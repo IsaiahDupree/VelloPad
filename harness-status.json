@@ -1,14 +1,16 @@
 {
   "projectId": "vellopad",
   "projectRoot": "/Users/isaiahdupree/Documents/Software/VelloPad",
-  "lastUpdated": "2026-01-29T22:32:46.349Z",
+  "lastUpdated": "2026-01-30T03:53:26.679Z",
   "sessionType": "CODING",
-  "status": "completed",
+  "status": "running",
   "stats": {
     "total": 142,
     "passing": 89,
     "pending": 53,
     "percentComplete": "62.7"
   },
-  "pid": 92424
+  "pid": 80696,
+  "currentSession": 24,
+  "model": "haiku"
 }

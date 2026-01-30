@@ -1,12 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { identifyPostHogUserByAuthId } from '@/lib/identity/posthog-identity';
+import { recordSignupTenantFromContext } from '@/lib/auth/signup-tenant-tracking';
+import { getTenantFromRequest } from '@/lib/tenant/resolver';
 
 /**
  * Auth callback handler
  * Handles OAuth redirects and email confirmations
- * Feature: GDP-009 - PostHog Identity Stitching
+ * Features:
+ * - GDP-009: PostHog Identity Stitching
+ * - MT-011: Customer Signup Tenant Tracking
  */
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -15,11 +19,21 @@ export async function GET(request: Request) {
 
   if (code) {
     const cookieStore = await cookies();
+    const headerStore = await headers();
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
+      // MT-011: Record which tenant user signed up through
+      try {
+        const tenantContext = await getTenantFromRequest(headerStore);
+        await recordSignupTenantFromContext(data.user.id, tenantContext);
+      } catch (tenantError) {
+        // Log but don't block auth flow
+        console.error('[Auth] Tenant tracking failed:', tenantError);
+      }
+
       // GDP-009: Identify user in PostHog and link to person record
       try {
         // Get anonymous PostHog ID from cookie if it exists
