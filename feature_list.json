@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 85,
+  "completedFeatures": 102,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -488,10 +488,25 @@
       "priority": "P1",
       "phase": 8,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "marketing",
       "files": [
-        "src/app/marketing/"
+        "supabase/migrations/20260202000002_add_marketing_hub_schema.sql",
+        "lib/marketing/types.ts",
+        "lib/marketing/task-service.ts",
+        "lib/marketing/metrics-service.ts",
+        "lib/marketing/plan-generator.ts",
+        "lib/marketing/plan-service.ts",
+        "app/api/marketing/tasks/route.ts",
+        "app/api/marketing/tasks/daily/route.ts",
+        "app/api/marketing/tasks/[taskId]/route.ts",
+        "app/api/marketing/tasks/[taskId]/complete/route.ts",
+        "app/api/marketing/plans/route.ts",
+        "app/api/marketing/plans/generate/route.ts",
+        "app/api/marketing/plans/current/route.ts",
+        "app/api/marketing/metrics/dashboard/route.ts",
+        "app/(app)/admin/marketing/page.tsx",
+        "e2e/marketing-hub.spec.ts"
       ],
       "dependencies": [
         "BS-701",
@@ -654,10 +669,13 @@
       "priority": "P1",
       "phase": 2,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "editor",
       "files": [
-        "src/components/editor/layout/"
+        "components/editor/layout/",
+        "components/editor/chapter-editor-with-layout.tsx",
+        "supabase/migrations/20260202000001_add_chapter_layout_config.sql",
+        "e2e/editor-layout-mode.spec.ts"
       ],
       "dependencies": [
         "BS-203"
@@ -670,10 +688,13 @@
       "priority": "P1",
       "phase": 2,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "ai",
       "files": [
-        "src/components/ai/sidekick/"
+        "components/ai/sidekick/ai-sidekick-panel.tsx",
+        "components/editor/chapter-editor-with-ai.tsx",
+        "app/api/ai/writing-assistant/route.ts",
+        "e2e/ai-sidekick.spec.ts"
       ],
       "dependencies": [
         "BS-203"
@@ -2292,8 +2313,8 @@
   "lastUpdated": "2026-01-29T23:00:00Z",
   "stats": {
     "total": 142,
-    "passing": 99,
-    "pending": 50,
-    "percentComplete": "69.7"
+    "passing": 102,
+    "pending": 40,
+    "percentComplete": "71.8"
   }
 }
