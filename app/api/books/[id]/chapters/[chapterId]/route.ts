@@ -21,7 +21,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { title, content, word_count } = body;
+    const { title, content, word_count, layout_config } = body;
 
     // Get book and verify access
     const { data: book, error: bookError } = await supabase
@@ -47,6 +47,7 @@ export async function PATCH(
     if (title !== undefined) updates.title = title;
     if (content !== undefined) updates.content = content;
     if (word_count !== undefined) updates.word_count = word_count;
+    if (layout_config !== undefined) updates.layout_config = layout_config;
 
     // Update chapter
     const { data: chapter, error: updateError } = await supabase

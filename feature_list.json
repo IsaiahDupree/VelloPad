@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 104,
+  "completedFeatures": 108,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -924,10 +924,14 @@
       "priority": "P1",
       "phase": 10,
       "effort": "4pts",
-      "passes": false,
+      "passes": true,
       "category": "email",
       "files": [
-        "src/lib/email/sending-domains.ts"
+        "src/lib/email/sending-domains.ts",
+        "supabase/migrations/20260202100000_add_sending_domains.sql",
+        "app/api/admin/sending-domains/route.ts",
+        "app/api/admin/sending-domains/[id]/verify/route.ts",
+        "e2e/sending-domains.spec.ts"
       ],
       "dependencies": [
         "MT-008"
@@ -940,10 +944,14 @@
       "priority": "P1",
       "phase": 10,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "email",
       "files": [
-        "src/lib/email/lifecycle/"
+        "src/lib/email/tenant-sequences.ts",
+        "supabase/migrations/20260202100100_add_email_templates.sql",
+        "app/api/admin/email-templates/route.ts",
+        "app/api/admin/email-templates/[id]/route.ts",
+        "e2e/email-templates.spec.ts"
       ],
       "dependencies": [
         "MT-008",
@@ -1573,7 +1581,7 @@
       "priority": "P1",
       "phase": 13,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
         "src/components/photo-book/image-tools/"
@@ -1589,7 +1597,7 @@
       "priority": "P1",
       "phase": 13,
       "effort": "13pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
         "src/lib/ai/photo-selection/"
@@ -2314,11 +2322,11 @@
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T23:00:00Z",
+  "lastUpdated": "2026-02-02T10:02:22.100Z",
   "stats": {
     "total": 142,
-    "passing": 104,
-    "pending": 38,
-    "percentComplete": "73.2"
+    "passing": 108,
+    "pending": 34,
+    "percentComplete": "76.1"
   }
 }
