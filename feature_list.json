@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 102,
+  "completedFeatures": 104,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -1521,10 +1521,12 @@
       "priority": "P1",
       "phase": 13,
       "effort": "5pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
-        "src/components/photo-book/page-sorter/"
+        "components/photo-book/page-sorter/PageSorter.tsx",
+        "components/photo-book/page-sorter/index.ts",
+        "e2e/photo-book-page-reordering.spec.ts"
       ],
       "dependencies": [
         "PB-019"
@@ -1537,10 +1539,12 @@
       "priority": "P1",
       "phase": 13,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
-        "src/components/photo-book/text-editor/"
+        "components/photo-book/text-editor/TextOverlayEditor.tsx",
+        "components/photo-book/text-editor/index.ts",
+        "e2e/photo-book-text-overlay.spec.ts"
       ],
       "dependencies": [
         "PB-019"
@@ -2313,8 +2317,8 @@
   "lastUpdated": "2026-01-29T23:00:00Z",
   "stats": {
     "total": 142,
-    "passing": 102,
-    "pending": 40,
-    "percentComplete": "71.8"
+    "passing": 104,
+    "pending": 38,
+    "percentComplete": "73.2"
   }
 }
