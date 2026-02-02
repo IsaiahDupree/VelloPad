@@ -3,7 +3,7 @@
   "description": "Modern book creation platform with full editing, print-ready PDF generation, and POD integration",
   "version": "1.0",
   "totalFeatures": 142,
-  "completedFeatures": 110,
+  "completedFeatures": 111,
   "phases": {
     "phase1_foundation": "Foundation & Auth (BS-EP01)",
     "phase2_book_studio": "Book Studio Core (BS-EP02)",
@@ -1859,10 +1859,12 @@
       "priority": "P1",
       "phase": 14,
       "effort": "8pts",
-      "passes": false,
+      "passes": true,
       "category": "photo-book",
       "files": [
-        "src/lib/bulk-orders/"
+        "lib/bulk-orders/index.ts",
+        "app/api/bulk-orders/route.ts",
+        "app/api/bulk-orders/[id]/route.ts"
       ],
       "dependencies": [
         "PB-013"
@@ -2327,11 +2329,11 @@
       ]
     }
   ],
-  "lastUpdated": "2026-02-02T10:12:59.905Z",
+  "lastUpdated": "2026-02-02T10:14:42.588Z",
   "stats": {
     "total": 142,
-    "passing": 110,
-    "pending": 32,
-    "percentComplete": "77.5"
+    "passing": 111,
+    "pending": 31,
+    "percentComplete": "78.2"
   }
 }
