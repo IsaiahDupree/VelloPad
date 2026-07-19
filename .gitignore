@@ -41,3 +41,7 @@ coverage/
 *.log
 *.pid
 *.seed
+
+# Backups (may contain secrets)
+*.bak
+.env*.bak
